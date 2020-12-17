@@ -45,6 +45,12 @@ class courseAssessments extends frontControllerApplication
 				'tab' => 'Assessments',
 				'url' => '',
 			),
+			'results' => array (
+				'description' => 'Results',
+				'tab' => 'Results',
+				'url' => 'results/',
+				'enableIf' => $this->userHasResultsAccess,
+			),
 			'rates' => array (
 				'description' => 'Submission rates',
 				'tab' => 'Submission rates',
@@ -119,14 +125,25 @@ class courseAssessments extends frontControllerApplication
 	private $subcourseModeExcludeFields = array ('q1howmany', 'q2overall', 'q3stimulating', 'q4presentation', 'q5readinglists', );
 	
 	
+	# Pre-actions logic
+	public function mainPreActions ()
+	{
+		# Load additional required libraries
+		require_once ('timedate.php');
+		
+		# Get the user details
+		$this->userDetails = $this->getUserDetails ();
+		
+		# Students can never see results
+		$this->userHasResultsAccess = ($this->userDetails && ($this->userDetails['type'] != 'student'));
+	}
+	
+	
 	# Constructor
 	public function main ()
 	{
 		# Do not load these on the feedback page
 		if ($this->action == 'feedback') {return;}
-		
-		# Load additional required libraries
-		require_once ('timedate.php');
 		
 		# Determine the current academic year, e.g. '2020-2021'
 		$this->currentAcademicYear = timedate::academicYear ($this->settings['yearStartMonth'], $asRangeString = true);
@@ -138,7 +155,7 @@ class courseAssessments extends frontControllerApplication
 		if (!$this->userDataIntegrity ()) {return false;}
 		
    		# Confirm the user exists
-		if (!$this->userDetails = $this->getUserDetails ()) {
+		if (!$this->userDetails) {
 			echo "\n<p>Welcome. You do not appear to be registered on this system. If you think you should be, please <a href=\"{$this->baseUrl}/feedback.html\">contact the Webmaster</a>.</p>";
 			return false;
 		}
@@ -208,8 +225,16 @@ class courseAssessments extends frontControllerApplication
 		# Deal with the submission half
 		$html .= $this->submissionSystem ();
 		
+		# Show the HTML
+		echo $html;
+	}
+	
+	
+	# Results
+	public function results ()
+	{
 		# Show results
-		$html .= $this->showResults ();
+		$html = $this->showResults ();
 		
 		# Show the HTML
 		echo $html;
@@ -778,11 +803,6 @@ class courseAssessments extends frontControllerApplication
 			Course Co-ordinators also need access to each course, but they are almost always going to be Lecturers on that course
 		*/
 		
-		# Students can never see results
-		if ($this->userDetails['type'] == 'student') {
-			return false;
-		}
-		
 		# Results are only viewable after the submission period closes (except for admins)
 		if (!$this->settings['allowViewingDuringSubmitting']) {
 			if (!$this->resultsViewable ()) {
@@ -805,8 +825,9 @@ class courseAssessments extends frontControllerApplication
 		$courseDetails = array_merge ($courses, $lecturers);
 		
 		# End if no results
+		#!# This message should be more specific
 		if (!$courseDetails) {
-			$html  = "\n<p><em>No results are available; perhaps the previous year's assessments have now closed for viewing?</em></p>";
+			$html  = "\n<p>No results are available; perhaps the previous year's assessments have now closed for viewing, or there are no results available to you?</p>";
 			return $html;
 		}
 		
