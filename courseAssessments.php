@@ -17,6 +17,7 @@ class courseAssessments extends frontControllerApplication
 			'table'			=> 'people',
 			'applicationName'	=> 'Online teaching assessments',
 			'administrators' => true,
+			'tabUlClass' => 'tabsflat',
 			'authentication' => true,
 			'feedback' => false,
 			'yearStartMonth' => 12,
