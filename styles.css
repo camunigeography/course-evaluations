@@ -12,3 +12,4 @@
 #courseassessments #assessmentsresults h3 {margin-top: 3em; page-break-before: always;}
 #courseassessments table.assessments-export {table-layout: fixed; width: 350%;}
 #courseassessments table.assessments-export tr th:first-child, table.assessments-export tr td:first-child {width: 600px;}
+#courseassessments div.jumplist {margin-bottom: 20px;}

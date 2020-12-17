@@ -233,11 +233,79 @@ class courseAssessments extends frontControllerApplication
 	# Results
 	public function results ()
 	{
+		# Start the HTML
+		$html = '';
+		
+		# Get the list of available years in the data
+		$years = $this->getAvailableYears ();
+		
+		# If there is no selected year, redirect to a URL containing the current academic year, to ensure that results for the current year are always consistently at the same URL, not left as /results/
+		if (!isSet ($_GET['academicyear'])) {
+			$url = $_SERVER['_SITE_URL'] . $this->baseUrl . '/results/' . $this->currentAcademicYear . '/';
+			$html = application::sendHeader (302, $url);
+			echo $html;
+			return;
+		}
+		
+		# Ensure the selected year is valid
+		if (!in_array ($_GET['academicyear'], $years)) {
+			$this->page404 ();
+			return false;
+		}
+		
+		# Set the selected year
+		$this->currentAcademicYear = $_GET['academicyear'];
+		
+		# Show a droplist of years
+		$html .= $this->yearsDroplist ($years, $this->currentAcademicYear);
+		
 		# Show results
-		$html = $this->showResults ();
+		$html .= $this->showResults ();
 		
 		# Show the HTML
 		echo $html;
+	}
+	
+	
+	# Function to get the list of available years in the data
+	private function getAvailableYears ($yearsBack = 5)
+	{
+		# Get the data
+		$query = "SELECT
+			DISTINCT year
+			FROM courses
+			WHERE (SUBSTR(year, 1, 4) >= (YEAR(CURDATE()) - {$yearsBack}))
+			ORDER BY year
+		;";
+		$years = $this->databaseConnection->getPairs ($query);
+		
+		# Ensure the current academic year is present
+		$years = array_merge ($years, array ($this->currentAcademicYear));
+		
+		# Return the list
+		return ($years);
+	}
+	
+	
+	# Function to create a droplist of years
+	private function yearsDroplist ($years, $defaultYear)
+	{
+		# Create the list of URLs
+		$urls = array ();
+		foreach ($years as $year) {
+			$url = $this->baseUrl . '/results/' . $year . '/';
+			$urls[$url] = $year;
+		}
+		
+		# Get the selected value
+		$yearUrls = array_flip ($urls);
+		$selected = $yearUrls[$defaultYear];
+		
+		# Create the droplist, which includes the redirection processor
+		$html = application::htmlJumplist ($urls, $selected, '', 'jumplist', 0, 'jumplist', $introductoryText = 'Show results for year:');
+		
+		# Return the HTML
+		return $html;
 	}
 	
 	
@@ -827,7 +895,7 @@ class courseAssessments extends frontControllerApplication
 		# End if no results
 		#!# This message should be more specific
 		if (!$courseDetails) {
-			$html  = "\n<p>No results are available; perhaps the previous year's assessments have now closed for viewing, or there are no results available to you?</p>";
+			$html  = "\n<p>No results are available to you for the selected year.</p>";
 			return $html;
 		}
 		

@@ -20,6 +20,8 @@
 	RedirectMatch permanent ^$applicationBaseUrl/([0-9]{4}-[0-9]{4})/(ia|ib|ii)/([^/]+)$ $applicationBaseUrl/$1/$2/$3/
 	RewriteRule ^$applicationBaseUrl/(results)/$ $applicationBaseUrl/index.html?action=$1 [L]
 	RewriteRule ^$applicationBaseUrl/(results)$ $applicationBaseUrl/$1/ [L,R]
+	RewriteRule ^$applicationBaseUrl/(results)/([0-9]{4}-[0-9]{4})/$ $applicationBaseUrl/index.html?action=$1&academicyear=$2 [L]
+	RewriteRule ^$applicationBaseUrl/(results)/([0-9]{4}-[0-9]{4})$ $applicationBaseUrl/$1/$2/ [L,R]
 	#!# This next one not currently working - not sure why
 	RedirectMatch permanent ^$applicationBaseUrl/([0-9]{4}-[0-9]{4})/(ia|ib|ii)/([^/]+)/([^/]+)$ $applicationBaseUrl/$1/$2/$3/$4/
 	RewriteRule ^$applicationBaseUrl/([0-9]{4}-[0-9]{4})/(ia|ib|ii)/([^/]+)/([^/]*)(/?)$ $applicationBaseUrl/index.html?action=data&year=$1&yeargroup=$2&module=$3&item=$4 [L]
