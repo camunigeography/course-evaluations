@@ -1,0 +1,22 @@
+<?php
+
+# Define the settings
+$settings = array (
+	'hostname' => 'localhost',
+	'username' => 'the_username',
+	'password' => 'the_password',
+	'userNameCallback' => 'userNameCallback',
+);
+
+# Callback function to get the full name of a user
+function userNameCallback ($username, $returnFalseIfGone)
+{
+	// Function returning array of user data
+}
+
+
+# Run the application with the specified settings
+require_once ('courseAssessments.php');
+new courseAssessments ($settings);
+
+?>
