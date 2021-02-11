@@ -86,6 +86,118 @@ class courseAssessments extends frontControllerApplication
 	}
 	
 	
+	# Database structure definition
+	public function databaseStructure ()
+	{
+		return "
+			CREATE TABLE `administrators` (
+			  `username__JOIN__people__people__reserved` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Username',
+			  `active` enum('','Yes','No') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Yes' COMMENT 'Currently active?',
+			  `privilege` enum('Administrator','Restricted administrator') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Administrator' COMMENT 'Administrator level',
+			  PRIMARY KEY (`username__JOIN__people__people__reserved`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='System administrators';
+			
+			CREATE TABLE `courses` (
+			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Unique key',
+			  `year` varchar(9) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Academic year',
+			  `yeargroup` enum('ia','ib','ii') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Year-group',
+			  `type` enum('','courses','fieldtrips','practicals','projects','general') COLLATE utf8mb4_unicode_ci DEFAULT 'courses' COMMENT 'Type of module',
+			  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'URL fragment',
+			  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Course title',
+			  `entries` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT 'Whether the course requires entries (=0) or is instead available for assessment by all students in the year (=1)',
+			  `paper` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Paper number',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Courses';
+			
+			CREATE TABLE `entries` (
+			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Unique key',
+			  `crsid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Username',
+			  `year` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Year',
+			  `yeargroup` enum('IA','IB','II') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Year-group',
+			  `paper` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Paper number',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Examination entries';
+			
+			CREATE TABLE `feedbackcourses` (
+			  `id` int NOT NULL AUTO_INCREMENT,
+			  `user` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Username',
+			  `courseId` int NOT NULL COMMENT 'Course',
+			  `q1howmany` enum('','All','Most','About half','Less than half') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '1. How many lectures in this %type have you attended?',
+			  `q2overall` enum('','Excellent','Good','Fair','Poor','No opinion') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '2. In general, how did you find this %type?',
+			  `q3stimulating` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '3. To what extent do you agree that the %type was intellectually stimulating?',
+			  `qsubcoursemodeextra4connection` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '4. To what extent do you agree that the sections of the paper connect logically with one another?',
+			  `q4enjoy` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '4. Which aspect of the %type did you particularly enjoy?',
+			  `q5improvement` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '5. Do you have any suggestions on how the %type might be improved?',
+			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Feedback from fieldtrips/practicals/projects';
+			
+			CREATE TABLE `feedbackgeneral` (
+			  `id` int NOT NULL AUTO_INCREMENT,
+			  `user` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Username',
+			  `courseId` int NOT NULL COMMENT 'Course ID',
+			  `q1library` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '1. The Library resources and services are good enough for my needs – please comment',
+			  `q2it` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '2. I have been able to access general IT resources when I have needed to – please comment',
+			  `q3facilities` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '3. I have been able to access specialised equipment, facilities or rooms when I have needed to – please comment',
+			  `q4confidence` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '4. The course has helped me to present myself with confidence – please comment',
+			  `q5communication` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '5. My communication skills have improved – please comment',
+			  `q6problemsolving` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '6. As a result of my studies, I feel confident in tackling unfamiliar problems – please comment',
+			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Feedback on general matters';
+			
+			CREATE TABLE `feedbacklecturers` (
+			  `id` int NOT NULL AUTO_INCREMENT,
+			  `user` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+			  `lecturerId` int NOT NULL COMMENT 'Lecturer',
+			  `q1howmany` enum('','All','Most','About half','Less than half') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '1. How many lectures by this lecturer have you attended?',
+			  `q2overall` enum('','Excellent','Good','Fair','Poor','No opinion') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '2. In general, how did you find this set of lectures?',
+			  `q3stimulating` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '3. To what extent do you agree that the lectures were intellectually stimulating?',
+			  `q4presentation` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '4. To what extent do you agree that the lectures were clearly presented?',
+			  `q5readinglists` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '5. To what extent do you agree that reading lists were satisfactory?',
+			  `q6enjoy` mediumtext COLLATE utf8mb4_unicode_ci COMMENT 'Which aspect of this set of lectures did you particularly enjoy?',
+			  `q7improvement` mediumtext COLLATE utf8mb4_unicode_ci COMMENT 'Do you have any suggestions on how this set of lectures might be improved?',
+			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Feedback from lecturers';
+			
+			CREATE TABLE `feedbackothers` (
+			  `id` int NOT NULL AUTO_INCREMENT,
+			  `user` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Username',
+			  `courseId` int NOT NULL AUTO_INCREMENT COMMENT 'Course ID',
+			  `q1overall` enum('','Excellent','Good','Fair','Poor','No opinion') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '1. In general, how did you find this %type?',
+			  `q2astimulating` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '2a. The %type was intellectually stimulating.',
+			  `q2bknowledge` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '2b. The %type provided me with new knowledge.',
+			  `q2cintegration` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '2c. Sessions/days linked together well.',
+			  `q3enjoy` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '3. Which aspect of the %type did you particularly enjoy?',
+			  `q4improvement` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '4. Do you have any suggestions about how the %type might be improved?',
+			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Feedback from fieldtrips/practicals/projects';
+			
+			CREATE TABLE `lecturers` (
+			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Unique key',
+			  `year` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Year',
+			  `yeargroup` enum('IA','IB','II') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Year-group',
+			  `course` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Course',
+			  `subcourseId` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Sub-course URL moniker, if relevant',
+			  `subcourseName` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Sub-course name, if relevant',
+			  `lecturer` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Lecturer',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Lecturing assessments';
+			
+			CREATE TABLE `settings` (
+			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Automatic key',
+			  `opening` datetime NOT NULL COMMENT 'Opening date',
+			  `closing` datetime NOT NULL COMMENT 'Closing date',
+			  `allowViewingDuringSubmitting` int DEFAULT '0' COMMENT 'Allow staff to view results while submission ongoing?',
+			  `introductionHtml` mediumtext COLLATE utf8mb4_unicode_ci COMMENT 'Introduction text',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Settings';
+		";
+	}
+	
+	
 	# Define the non-course types
 	#!# May be able to get rid of this now that all entries are defined explicitly, though check this doesn't disrupt the "how did you find this [name]?" label
 	var $types = array (
