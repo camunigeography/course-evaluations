@@ -15,7 +15,7 @@ class courseAssessments extends frontControllerApplication
 			'globalPeopleDatabase' => 'people',
 			'div' => 'courseassessments',
 			'table'			=> 'people',
-			'applicationName'	=> 'Online teaching assessments',
+			'applicationName'	=> 'Course evaluations',
 			'administrators' => true,
 			'tabUlClass' => 'tabsflat',
 			'authentication' => true,
@@ -41,8 +41,8 @@ class courseAssessments extends frontControllerApplication
 		# Define the actions
 		return $actions = array (
 			'data' => array (
-				'description' => 'Submit an assessment',
-				'tab' => 'Assessments',
+				'description' => 'Submit an evaluation',
+				'tab' => 'Evaluations',
 				'url' => '',
 			),
 			'results' => array (
