@@ -1,15 +1,15 @@
-#courseassessments tr.courseId td, #courseassessments tr[class*='_lecturer'] td {font-size: 1.2em; background-color: #ccc;}
-#courseassessments tr._heading1 td {background-color: #f7f7f7;}
-#courseassessments .assessments.courses tr.heading td {padding: 0; margin: 0;}
-#courseassessments .assessments.courses tr.heading td h3 {color: #333; font-family: georgia; margin: 0; display: block; background-color: #ccf; font-size: 1.2em; border-top: 4px solid #669; padding: 10px; margin-top: 2em;}
-#courseassessments .assessments.courses tr.heading td h4 {color: #333; font-family: georgia; margin: 0; display: block; background-color: #ccccd8; font-size: 1.2em; border-top: 2px solid #669; padding: 5px 10px; margin-top: 1.5em; margin-bottom: 5px;}
-#courseassessments .assessments.courses tr.heading td p {display: block; background-color: #f7f7f7; margin: 0; padding: 5px 10px;}
-#courseassessments .assessments.courses tr.heading td p.noteskippable {font-weight: bold; color: white; background-color: #369; margin: 1.5em 0; border-left: 10px solid red;}
-#courseassessments .assessments.courses tr td.title span.requirednoneditable {display: none;}
-#courseassessments ul.listing a.submitted {color: #999;}
-#courseassessments p.feedback {margin-top: 3em;}
-#courseassessments #assessmentsresults h2 {page-break-before: always;}
-#courseassessments #assessmentsresults h3 {margin-top: 3em; page-break-before: always;}
-#courseassessments table.assessments-export {table-layout: fixed; width: 350%;}
-#courseassessments table.assessments-export tr th:first-child, table.assessments-export tr td:first-child {width: 600px;}
-#courseassessments div.jumplist {margin-bottom: 20px;}
+#courseevaluations tr.courseId td, #courseevaluations tr[class*='_lecturer'] td {font-size: 1.2em; background-color: #ccc;}
+#courseevaluations tr._heading1 td {background-color: #f7f7f7;}
+#courseevaluations .assessments.courses tr.heading td {padding: 0; margin: 0;}
+#courseevaluations .assessments.courses tr.heading td h3 {color: #333; font-family: georgia; margin: 0; display: block; background-color: #ccf; font-size: 1.2em; border-top: 4px solid #669; padding: 10px; margin-top: 2em;}
+#courseevaluations .assessments.courses tr.heading td h4 {color: #333; font-family: georgia; margin: 0; display: block; background-color: #ccccd8; font-size: 1.2em; border-top: 2px solid #669; padding: 5px 10px; margin-top: 1.5em; margin-bottom: 5px;}
+#courseevaluations .assessments.courses tr.heading td p {display: block; background-color: #f7f7f7; margin: 0; padding: 5px 10px;}
+#courseevaluations .assessments.courses tr.heading td p.noteskippable {font-weight: bold; color: white; background-color: #369; margin: 1.5em 0; border-left: 10px solid red;}
+#courseevaluations .assessments.courses tr td.title span.requirednoneditable {display: none;}
+#courseevaluations ul.listing a.submitted {color: #999;}
+#courseevaluations p.feedback {margin-top: 3em;}
+#courseevaluations #assessmentsresults h2 {page-break-before: always;}
+#courseevaluations #assessmentsresults h3 {margin-top: 3em; page-break-before: always;}
+#courseevaluations table.assessments-export {table-layout: fixed; width: 350%;}
+#courseevaluations table.assessments-export tr th:first-child, table.assessments-export tr td:first-child {width: 600px;}
+#courseevaluations div.jumplist {margin-bottom: 20px;}

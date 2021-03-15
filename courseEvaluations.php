@@ -1,9 +1,9 @@
 <?php
 
 
-# Class to provide an assessments system
+# Class to provide a course evaluations system
 require_once ('frontControllerApplication.php');
-class courseAssessments extends frontControllerApplication
+class courseEvaluations extends frontControllerApplication
 {
 	# Specify available arguments as defaults or as NULL (to represent a required argument)
 	public function defaults ()
@@ -13,7 +13,7 @@ class courseAssessments extends frontControllerApplication
 			'username' => 'assessments',
 			'database'			=> 'assessments',
 			'globalPeopleDatabase' => 'people',
-			'div' => 'courseassessments',
+			'div' => 'courseevaluations',
 			'table'			=> 'people',
 			'applicationName'	=> 'Course evaluations',
 			'administrators' => true,

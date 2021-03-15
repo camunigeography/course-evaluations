@@ -1,4 +1,4 @@
-Course assessments system
+Course evaluations system
 =========================
 
 This is a PHP application which implements a system for student course feedback.
@@ -36,7 +36,7 @@ Dependencies
 Author
 ------
 
-Martin Lucas-Smith, Department of Geography, 2006-20.
+Martin Lucas-Smith, Department of Geography, 2006-21.
 
 
 License

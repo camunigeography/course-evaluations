@@ -2,12 +2,12 @@
 
 #   Example usage in httpd.conf:
 #   
-#   # Assessments
-#   Include /path/to/course-assessments/.httpd.conf.extract.txt
-#   Use MacroCourseAssessments "/assessments" "Course assessments" "/path/to/course-assessments/:/path/to/php/libraries/"
+#   # Course evaluations
+#   Include /path/to/course-evaluations/.httpd.conf.extract.txt
+#   Use MacroCourseEvaluations "/evaluations" "Course evaluations" "/path/to/course-evaluations/:/path/to/php/libraries/"
 
 
-<Macro MacroCourseAssessments $applicationBaseUrl $description $includePath>
+<Macro MacroCourseEvaluations $applicationBaseUrl $description $includePath>
 	
 	<Location $applicationBaseUrl>
 		php_value include_path "$includePath"
