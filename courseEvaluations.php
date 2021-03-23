@@ -1118,7 +1118,7 @@ class courseEvaluations extends frontControllerApplication
 		$query = "SELECT
 			lecturers.*,
 			CONCAT(lecturers.year,'_',LOWER(lecturers.yeargroup),'_',lecturers.course,'_',lecturers.lecturer) AS href,
-			CONCAT(UPPER(lecturers.yeargroup),IF(courses.paper REGEXP '[0-9]',CONCAT(' Paper ',courses.paper,':'),''),' ',courses.title,' - ',{$this->settings['globalPeopleDatabase']}.people.forename,' ',{$this->settings['globalPeopleDatabase']}.people.surname) AS heading,
+			CONCAT(UPPER(lecturers.yeargroup),IF(courses.paper REGEXP '[0-9]',CONCAT(' Paper ',courses.paper,':'),''),' ',courses.title,IF(lecturers.subCourseName IS NOT NULL,CONCAT(' (', lecturers.subCourseName,')'),''),' - ',{$this->settings['globalPeopleDatabase']}.people.forename,' ',{$this->settings['globalPeopleDatabase']}.people.surname) AS heading,
 			'lecturers' AS type,
 			LPAD(courses.paper,100,'0') AS paperNumberNatsorted
 			FROM
@@ -1133,7 +1133,7 @@ class courseEvaluations extends frontControllerApplication
 					AND lecturers.yeargroup = courses.yeargroup
 				AND lecturers.lecturer = {$this->settings['globalPeopleDatabase']}.people.username
 				" . ((($this->userDetails['type'] == 'lecturer') || ($this->userDetails['type'] == 'organiser')) ? "AND lecturers.lecturer = '{$this->user}'" : '') . "
-			ORDER BY year, yeargroup, type, paperNumberNatsorted, course, lecturer
+			ORDER BY year, yeargroup, type, paperNumberNatsorted, course, subcourseId, lecturer
 		;";
 		
 		# Get the data
