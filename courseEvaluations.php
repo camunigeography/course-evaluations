@@ -1140,7 +1140,7 @@ class courseEvaluations extends frontControllerApplication
 		#!# Some sort of error handling needed that detects the difference between database failure and no results
 		$lecturers = $this->databaseConnection->getData ($query);
 		
-		# For each course ]having a subcourse identifier, state the fields to exclude
+		# For each course having a subcourse identifier, state the fields to exclude
 		foreach ($lecturers as $index => $lecturer) {
 			if (isSet ($lecturer['subcourseId']) && $lecturer['subcourseId']) {
 				$lecturers[$index]['excludeQuestions'] = $this->subcourseModeExcludeFields;

@@ -18,7 +18,7 @@ class assessmentsResults
 		$this->types = $types;
 		$this->currentAcademicYear = $currentAcademicYear;
 		$this->userIsAdministrator = $userIsAdministrator;
-		
+
 		# Debugging
 		//echo '---'; application::dumpData ($courseDetailsByGroup);
 		//echo '---'; application::dumpData ($questionsByGroup);
@@ -253,6 +253,8 @@ class assessmentsResults
 				
 				# Start with the heading
 				$html .= "\n<h3 id=\"{$course['href']}\">" . htmlspecialchars ($course['heading']) . '</h3>';
+				
+				# For courses, make clear the results are not about a specific lecturer
 				if ($group == 'courses') {
 					$html .= '<div class="warningbox"><p>Note: Details for courses apply to the whole course (potentially having several lecturers and supervisors), not a specific lecturer.</p></div>';
 				}
