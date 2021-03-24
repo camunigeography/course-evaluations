@@ -31,6 +31,7 @@ class courseEvaluations extends frontControllerApplication
 			'overrideUserYeargroup' => false,
 			'additionalLecturersResultsAccess' => array (),
 			'userNameCallback' => 'userNameCallback',			// Callback function
+			'overrideQuestionLabels' => array (),		// Array of academicYear => array (table => array (questionId => questionTitle))
 		);
 	}
 	
@@ -739,18 +740,21 @@ class courseEvaluations extends frontControllerApplication
 			$alsoExclude = array ('qsubcoursemodeextra4connection', );
 			$exclude = array_merge ($exclude, $alsoExclude);
 		}
+		$table = 'feedbackcourses';
+		$attributes = array (
+			'q1howmany' => array ('heading' => array ('3' => "Overview: {$courseTitle}")),
+			'qsubcoursemodeextra4connection' => array ('required' => true, ),
+			'q4enjoy' => array ('title' => ($subcourseMode ? '5' : '4') . '. Which aspect of the course did you particularly enjoy?', ),
+			'q5improvement' => array ('title' => ($subcourseMode ? '6' : '5') . '. Do you have any suggestions on how the course might be improved?', ),
+		);
+		$attributes = $this->overrideQuestionLabels ($table, $attributes);
 		$form->dataBinding (array (
 			'database' => $this->settings['database'],
-			'table' => $table = 'feedbackcourses',
+			'table' => $table,
 			'prefix' => "course{$course['id']}",
 			'exclude' => $exclude,
 			'data' => $data['course'],
-			'attributes' => array (
-				'q1howmany' => array ('heading' => array ('3' => "Overview: {$courseTitle}")),
-				'qsubcoursemodeextra4connection' => array ('required' => true, ),
-				'q4enjoy' => array ('title' => ($subcourseMode ? '5' : '4') . '. Which aspect of the course did you particularly enjoy?', ),
-				'q5improvement' => array ('title' => ($subcourseMode ? '6' : '5') . '. Do you have any suggestions on how the course might be improved?', ),
-			),
+			'attributes' => $attributes,
 		));
 		
 		# Databind the form for each lecturer
@@ -775,21 +779,24 @@ class courseEvaluations extends frontControllerApplication
 			}
 			
 			# Add this block
+			$table = 'feedbacklecturers';
 			foreach ($lecturers as $key => $lecturer) {
 				$data['lecturers'][$key] = ((isSet ($this->submissions['lecturers']) && isSet ($this->submissions['lecturers'][$key])) ? $this->submissions['lecturers'][$key] : array ());
+				$attributes = array (
+					'lecturerId' => array ('type' => 'select', 'editable' => false, 'values' => array ($lecturer['id'] => $lecturer['name']), 'default' => $lecturer['id']),
+					'q1howmany' => array ('required' => true, ),
+					'q2overall' => array ('required' => true, ),
+					'q6enjoy' => array ('rows' => 4, 'title' => ($subcourseMode ? '1' : '6') . '. Which aspect of this set of lectures did you particularly enjoy?', ),
+					'q7improvement' => array ('rows' => 4, 'title' => ($subcourseMode ? '2' : '7') . '. Do you have any suggestions on how this set of lectures might be improved?', ),
+				);
+				$attributes = $this->overrideQuestionLabels ($table, $attributes);
 				$form->dataBinding (array (
 					'database' => $this->settings['database'],
-					'table' => $table = 'feedbacklecturers',
+					'table' => $table,
 					'data' => $data['lecturers'][$key],
 					'prefix' => "lecturer{$key}",
 					'exclude' => $exclude,
-					'attributes' => array (
-						'lecturerId' => array ('type' => 'select', 'editable' => false, 'values' => array ($lecturer['id'] => $lecturer['name']), 'default' => $lecturer['id']),
-						'q1howmany' => array ('required' => true, ),
-						'q2overall' => array ('required' => true, ),
-						'q6enjoy' => array ('rows' => 4, 'title' => ($subcourseMode ? '1' : '6') . '. Which aspect of this set of lectures did you particularly enjoy?', ),
-						'q7improvement' => array ('rows' => 4, 'title' => ($subcourseMode ? '2' : '7') . '. Do you have any suggestions on how this set of lectures might be improved?', ),
-					),
+					'attributes' => $attributes,
 				));
 			}
 		}
@@ -838,6 +845,39 @@ class courseEvaluations extends frontControllerApplication
 				}
 			}
 		}
+	}
+	
+	
+	# Function to merge in overriden question labels
+	#!# Need to add support for e.g. '2021-2022+' to cover future years
+	private function overrideQuestionLabels ($currentTable, $definitions, $format = 'form' /* or results */)
+	{
+		# Loop through each supplied override year, if any
+		foreach ($this->settings['overrideQuestionLabels'] as $academicYear => $tables) {
+			if ($academicYear != $this->currentAcademicYear) {continue;}	// Skip if not matching
+			foreach ($tables as $type => $questions) {
+				
+				# Format for use in a form
+				if ($format == 'form') {
+					$table = 'feedback' . $type;
+					if ($table == $currentTable) {	// Ensure matching table
+						foreach ($questions as $questionFieldname => $title) {
+							$definitions[$questionFieldname]['title'] = $title;
+						}
+					}
+				}
+				
+				# Format for use in results
+				if ($format == 'results') {
+					foreach ($questions as $questionFieldname => $title) {
+						$definitions[$questionFieldname] = $title;
+					}
+				}
+			}
+		}
+		
+		# Return the overriden attributes
+		return $definitions;
 	}
 	
 	
@@ -918,24 +958,27 @@ class courseEvaluations extends frontControllerApplication
 			'cols' => 40,
 		));
 		
+		# Attributes
+		$attributes = array (
+			#!# Review whether forceAssociative is needed now that it has been improved in application.php v. 1.2.19
+			'courseId' => array ('type' => 'select', 'editable' => false, 'values' => array ($this->courseId => $title), 'default' => $this->courseId, 'forceAssociative' => true, 'title' => $label, ),
+			
+			# Attributes for feedbackothers table
+			'q2astimulating' => array ('heading' => array ('' => 'To what extent do you feel that ...')),
+			
+			# Attributes for feedbackgeneral table
+			'q1library' => array ('heading' => array (3 => 'Learning resources'), ),
+			'q4confidence' => array ('heading' => array (3 => 'Personal development'), ),
+		);
+		
 		# Databind the form
+		$attributes = $this->overrideQuestionLabels ($table, $attributes);
 		$form->dataBinding (array (
 			'database' => $this->settings['database'],
 			'table' => $table,
 			'data' => $data[$this->type],
 			'exclude' => array ('id','user', 'timestamp'),
-			'attributes' => array (
-				#!# Review whether forceAssociative is needed now that it has been improved in application.php v. 1.2.19
-				'courseId' => array ('type' => 'select', 'editable' => false, 'values' => array ($this->courseId => $title), 'default' => $this->courseId, 'forceAssociative' => true, 'title' => $label, ),
-				
-				# Attributes for feedbackothers table
-				'q2astimulating' => array ('heading' => array ('' => 'To what extent do you feel that ...')),
-				
-				# Attributes for feedbackgeneral table
-				'q1library' => array ('heading' => array (3 => 'Learning resources'), ),
-				'q4confidence' => array ('heading' => array (3 => 'Personal development'), ),
-				
-			),
+			'attributes' => $attributes,
 		));
 		
 		# Send a backup copy to the administrator
@@ -1042,7 +1085,8 @@ class courseEvaluations extends frontControllerApplication
 			
 			# Get the headings for each table
 			$questionsByGroup[$group] = $this->databaseConnection->getHeadings ($this->settings['database'], $table);
-			
+			$questionsByGroup[$group] = $this->overrideQuestionLabels ($group, $questionsByGroup[$group], 'results');
+
 			# Get the fields for this table
 			$fieldsByGroup[$group] = $this->databaseConnection->getFields ($this->settings['database'], $table);
 			
