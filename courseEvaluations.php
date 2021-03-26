@@ -201,6 +201,15 @@ class courseEvaluations extends frontControllerApplication
 	}
 	
 	
+	# Define the table names, which may be overriden by year later
+	private $tables = array (
+		'courses'	=> 'feedbackcourses',
+		'lecturers'	=> 'feedbacklecturers',
+		'others'	=> 'feedbackothers',		// E.g. for practicals
+		'general'	=> 'feedbackgeneral',
+	);
+	
+	
 	# Define the non-course types
 	#!# May be able to get rid of this now that all entries are defined explicitly, though check this doesn't disrupt the "how did you find this [name]?" label
 	var $types = array (
@@ -303,7 +312,7 @@ class courseEvaluations extends frontControllerApplication
 	private function runDuplicatesCheck ()
 	{
 		$duplicatesProblemsHtml = '';
-		$checkTables = array ('feedbackcourses', 'feedbacklecturers', 'feedbackothers');
+		$checkTables = array ($this->tables['courses'], $this->tables['lecturers'], $this->tables['others']);
 		foreach ($checkTables as $checkTable) {
 			#!# Hard-coded year, not taking account of $this->settings['overrideYear']
 			$query = "SELECT
@@ -742,7 +751,7 @@ class courseEvaluations extends frontControllerApplication
 			$alsoExclude = array ('qsubcoursemodeextra4connection', );
 			$exclude = array_merge ($exclude, $alsoExclude);
 		}
-		$table = 'feedbackcourses';
+		$table = $this->tables['courses'];
 		$attributes = array (
 			'q1howmany' => array ('heading' => array ('3' => "Overview: {$courseTitle}")),
 			'qsubcoursemodeextra4connection' => array ('required' => true, ),
@@ -781,7 +790,7 @@ class courseEvaluations extends frontControllerApplication
 			}
 			
 			# Add this block
-			$table = 'feedbacklecturers';
+			$table = $this->tables['lecturers'];
 			foreach ($lecturers as $key => $lecturer) {
 				$data['lecturers'][$key] = ((isSet ($this->submissions['lecturers']) && isSet ($this->submissions['lecturers'][$key])) ? $this->submissions['lecturers'][$key] : array ());
 				$attributes = array (
@@ -821,9 +830,9 @@ class courseEvaluations extends frontControllerApplication
 		);
 		$conditions = ($isUpdate ? $keying : false);
 		$result["course{$course['id']}"] += $keying;
-		if (!$this->databaseConnection->$action ($this->settings['database'], 'feedbackcourses', $result["course{$course['id']}"], $conditions)) {
+		if (!$this->databaseConnection->$action ($this->settings['database'], $this->tables['courses'], $result["course{$course['id']}"], $conditions)) {
 			#!# Use generic error-throwing stuff
-			application::utf8Mail ($this->settings['webmaster'], 'System error in Teaching assessment', wordwrap ("{$action} failed for {$this->settings['database']}.feedbackcourses with data:\n\n" . print_r ($result["course{$course['id']}"], 1)), "From: {$this->settings['webmaster']}");
+			application::utf8Mail ($this->settings['webmaster'], 'System error in Teaching assessment', wordwrap ("{$action} failed for {$this->settings['database']}.{$this->tables['courses']} with data:\n\n" . print_r ($result["course{$course['id']}"], 1)), "From: {$this->settings['webmaster']}");
 			echo "<p>There was a problem " . ($isUpdate ? 'updating' : 'inserting') . " the data. The webmaster has been informed.</p>";
 		}
 		
@@ -840,9 +849,9 @@ class courseEvaluations extends frontControllerApplication
 				$result["lecturer{$key}"] += $keying;
 				$result['user'] = $this->userMd5;
 				$conditions = ($isUpdate ? $keying : false);
-				if (!$this->databaseConnection->$action ($this->settings['database'], 'feedbacklecturers', $result["lecturer{$key}"], $conditions)) {
+				if (!$this->databaseConnection->$action ($this->settings['database'], $this->tables['lecturers'], $result["lecturer{$key}"], $conditions)) {
 					#!# Use generic error-throwing stuff
-					application::utf8Mail ($this->settings['webmaster'], 'System error in Teaching assessment', wordwrap ("{$action} failed for {$this->settings['database']}.feedbacklecturers with data:\n\n" . print_r ($result["lecturer{$key}"], 1)), "From: {$this->settings['webmaster']}");
+					application::utf8Mail ($this->settings['webmaster'], 'System error in Teaching assessment', wordwrap ("{$action} failed for {$this->settings['database']}.{$this->tables['lecturers']} with data:\n\n" . print_r ($result["lecturer{$key}"], 1)), "From: {$this->settings['webmaster']}");
 					echo "<p>There was a problem " . ($isUpdate ? 'updating' : 'inserting') . " the data. The webmaster has been informed.</p>";
 				}
 			}
@@ -861,7 +870,7 @@ class courseEvaluations extends frontControllerApplication
 				
 				# Format for use in a form
 				if ($format == 'form') {
-					$table = 'feedback' . $type;
+					$table = $this->tables[$type];
 					if ($table == $currentTable) {	// Ensure matching table
 						foreach ($questions as $questionFieldname => $title) {
 							$definitions[$questionFieldname]['title'] = $title;
@@ -886,28 +895,28 @@ class courseEvaluations extends frontControllerApplication
 	# Fieldtrips form
 	private function fieldtripsForm ()
 	{
-		$this->createForm ('feedbackothers');
+		$this->createForm ($this->tables['others']);
 	}
 	
 	
 	# Practicals form
 	private function practicalsForm ()
 	{
-		$this->createForm ('feedbackothers');
+		$this->createForm ($this->tables['others']);
 	}
 	
 	
 	# Projects form
 	private function projectsForm ()
 	{
-		$this->createForm ('feedbackothers');
+		$this->createForm ($this->tables['others']);
 	}
 	
 	
 	# General form
 	private function generalForm ()
 	{
-		$this->createForm ('feedbackgeneral', 'Section');
+		$this->createForm ($this->tables['general'], 'Section');
 	}
 	
 	
@@ -965,10 +974,10 @@ class courseEvaluations extends frontControllerApplication
 			#!# Review whether forceAssociative is needed now that it has been improved in application.php v. 1.2.19
 			'courseId' => array ('type' => 'select', 'editable' => false, 'values' => array ($this->courseId => $title), 'default' => $this->courseId, 'forceAssociative' => true, 'title' => $label, ),
 			
-			# Attributes for feedbackothers table
+			# Attributes for $this->tables['others'] table
 			'q2astimulating' => array ('heading' => array ('' => 'To what extent do you feel that ...')),
 			
-			# Attributes for feedbackgeneral table
+			# Attributes for $this->tables['general'] table
 			'q1library' => array ('heading' => array (3 => 'Learning resources'), ),
 			'q4confidence' => array ('heading' => array (3 => 'Personal development'), ),
 		);
@@ -1070,16 +1079,12 @@ class courseEvaluations extends frontControllerApplication
 			#!# Move to a central registry
 			switch ($group) {
 				case 'courses':
-					$table = 'feedbackcourses';
-					break;
 				case 'lecturers':
-					$table = 'feedbacklecturers';
-					break;
 				case 'general':
-					$table = 'feedbackgeneral';
+					$table = $this->tables[$group];
 					break;
 				default:
-					$table = 'feedbackothers';
+					$table = $this->tables['others'];
 			}
 			
 			# Get the submissions for each course
@@ -1351,10 +1356,10 @@ class courseEvaluations extends frontControllerApplication
 		
 		# Define the table relations
 		$relations = array (
-			'feedbackothers' => 'course',
-			'feedbackcourses' => 'course',
-			'feedbacklecturers' => 'lecturer',
-			'feedbackgeneral' => 'course',
+			$this->tables['others'] => 'course',
+			$this->tables['courses'] => 'course',
+			$this->tables['lecturers'] => 'lecturer',
+			$this->tables['general'] => 'course',
 		);
 		
 		# Get each data set
@@ -1498,9 +1503,9 @@ class courseEvaluations extends frontControllerApplication
 		# Get the counts and rearrange them as user => total
 		$query = "SELECT
 				user,
-				COUNT(assessments.feedbackcourses.id) as total
-			FROM assessments.feedbackcourses
-			LEFT OUTER JOIN assessments.courses ON assessments.feedbackcourses.courseId = assessments.courses.id
+				COUNT(assessments.{$this->tables['courses']}.id) as total
+			FROM assessments.{$this->tables['courses']}
+			LEFT OUTER JOIN assessments.courses ON assessments.{$this->tables['courses']}.courseId = assessments.courses.id
 			WHERE assessments.courses.year = '{$this->currentAcademicYear}'
 			GROUP BY user
 			ORDER BY total;";
