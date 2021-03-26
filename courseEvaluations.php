@@ -11,11 +11,11 @@ class courseEvaluations extends frontControllerApplication
 		return $defaults = array (
 			'hostname' => 'localhost',
 			'username' => 'assessments',
-			'database'			=> 'assessments',
+			'database' => 'assessments',
 			'globalPeopleDatabase' => 'people',
 			'div' => 'courseevaluations',
-			'table'			=> 'people',
-			'applicationName'	=> 'Course evaluations',
+			'table' => 'people',
+			'applicationName' => 'Course evaluations',
 			'administrators' => true,
 			'tabUlClass' => 'tabsflat',
 			'authentication' => true,
@@ -32,6 +32,8 @@ class courseEvaluations extends frontControllerApplication
 			'additionalLecturersResultsAccess' => array (),
 			'userNameCallback' => 'userNameCallback',			// Callback function
 			'overrideQuestionLabels' => array (),		// Array of academicYear => array (table => array (questionId => questionTitle))
+			'userSwitcherUsers' => array ($this, 'userSwitcherUsers'),
+			'userSwitcherOnSwitch' => array ($this, 'userSwitcherOnSwitch'),
 		);
 	}
 	
@@ -244,6 +246,12 @@ class courseEvaluations extends frontControllerApplication
 		# Load additional required libraries
 		require_once ('timedate.php');
 		
+		# Determine the current academic year, e.g. '2020-2021'
+		$this->currentAcademicYear = timedate::academicYear ($this->settings['yearStartMonth'], $asRangeString = true);
+		
+		# Override the current year if fixed
+		if ($this->settings['overrideYear']) {$this->currentAcademicYear = $this->settings['overrideYear'];}
+		
 		# Get the user details
 		$this->userDetails = $this->getUserDetails ();
 		
@@ -257,12 +265,6 @@ class courseEvaluations extends frontControllerApplication
 	{
 		# Do not load these on the feedback page
 		if ($this->action == 'feedback') {return;}
-		
-		# Determine the current academic year, e.g. '2020-2021'
-		$this->currentAcademicYear = timedate::academicYear ($this->settings['yearStartMonth'], $asRangeString = true);
-		
-		# Override the current year if fixed
-		if ($this->settings['overrideYear']) {$this->currentAcademicYear = $this->settings['overrideYear'];}
 		
 		# Perform data integrity checks or end
 		if (!$this->userDataIntegrity ()) {return false;}
@@ -1776,6 +1778,51 @@ class courseEvaluations extends frontControllerApplication
 			'int1ToCheckbox' => true,
 		);
 		parent::settings ($dataBindingSettingsOverrides);
+	}
+	
+	
+	# User switcher lookup
+	public function userSwitcherUsers ()
+	{
+		return $this->getUsersByYeargroup ();
+	}
+	
+	
+	# User switcher callback on change
+	public function userSwitcherOnSwitch ($newUser)
+	{
+		# Re-run the main pre-actions, to regenerate the user's credentials
+		$this->mainPreActions ();
+	}
+	
+	
+	# Function to get users by yeargroup
+	private function getUsersByYeargroup ()
+	{
+		# Get the users
+		$query = "
+			SELECT
+				DISTINCT crsid,
+				CONCAT_WS(' ', people.forename, people.surname) AS name,
+				yeargroup
+			FROM assessments.entries
+			LEFT OUTER JOIN {$this->settings['globalPeopleDatabase']}.people ON assessments.entries.crsid = {$this->settings['globalPeopleDatabase']}.people.username
+			WHERE entries.year = '{$this->currentAcademicYear}'
+			ORDER BY yeargroup, crsid
+		;";
+		#!# Can't seem to get out by username as key, using "{$this->settings['globalPeopleDatabase']}.people"
+		$users = $this->databaseConnection->getData ($query);
+		
+		# Regroup by yeargroup
+		$usersByYeargroup = array ();
+		foreach ($users as $user) {
+			$yeargroup = $user['yeargroup'];
+			$username = $user['crsid'];
+			$usersByYeargroup[$yeargroup][$username] = $username . ' - ' . $user['name'];
+		}
+		
+		# Return the list
+		return $usersByYeargroup;
 	}
 }
 
