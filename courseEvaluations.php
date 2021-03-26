@@ -1399,13 +1399,13 @@ class courseEvaluations extends frontControllerApplication
 		//application::dumpData ($this->assessing, $hide = true);
 		
 		# Start this section
-		$html  = "\n<h2>Assessments</h2>";
+		$html  = "\n<h2>Evaluations</h2>";
 		
 		# Ensure the facility is open
 		if (!$this->facilityIsOpen ($html)) {return $html;}
 		
 		# Create a list
-		$html .= "\n<p>You are registered on the following courses or other modules and are asked kindly to assess these.<br />(If the list is not fully correct, please <a href=\"{$this->baseUrl}/feedback.html\">contact the Webmaster</a>.)</p>";
+		$html .= "\n<p>You are registered on the following courses or other modules and are asked kindly to evaluate these.<br />(If the list is not fully correct, please <a href=\"{$this->baseUrl}/feedback.html\">contact the Webmaster</a>.)</p>";
 		
 		# Add introduction text if required
 		if ($this->settings['introductionHtml']) {
