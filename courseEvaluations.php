@@ -104,7 +104,7 @@ class courseEvaluations extends frontControllerApplication
 			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Unique key',
 			  `year` varchar(9) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Academic year',
 			  `yeargroup` enum('ia','ib','ii') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Year-group',
-			  `type` enum('','courses','fieldtrips','practicals','projects','general') COLLATE utf8mb4_unicode_ci DEFAULT 'courses' COMMENT 'Type of module',
+			  `type` enum('','courses','fieldtrips','practicals','projects','dissertation','general') COLLATE utf8mb4_unicode_ci DEFAULT 'courses' COMMENT 'Type of module',
 			  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'URL fragment',
 			  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Course title',
 			  `entries` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT 'Whether the course requires entries (=0) or is instead available for assessment by all students in the year (=1)',
@@ -164,6 +164,15 @@ class courseEvaluations extends frontControllerApplication
 			  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Feedback from lecturers';
 			
+			CREATE TABLE `feedbackdissertation` (
+			  `id` int NOT NULL AUTO_INCREMENT,
+			  `user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Username',
+			  `courseId` int NOT NULL COMMENT 'Course ID',
+			  `q1overall` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '1. This set of lectures has given me more confidence in developing a dissertation idea than at the start of the year',
+			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Dissertation feedback';
+			
 			CREATE TABLE `feedbackothers` (
 			  `id` int NOT NULL AUTO_INCREMENT,
 			  `user` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Username',
@@ -203,10 +212,11 @@ class courseEvaluations extends frontControllerApplication
 	
 	# Define the table names, which may be overriden by year later
 	private $tables = array (
-		'courses'	=> 'feedbackcourses',
-		'lecturers'	=> 'feedbacklecturers',
-		'others'	=> 'feedbackothers',		// E.g. for practicals
-		'general'	=> 'feedbackgeneral',
+		'courses'		=> 'feedbackcourses',
+		'lecturers'		=> 'feedbacklecturers',
+		'others'		=> 'feedbackothers',		// E.g. for practicals
+		'dissertation'	=> 'feedbackdissertation',
+		'general'		=> 'feedbackgeneral',
 	);
 	
 	
@@ -230,6 +240,12 @@ class courseEvaluations extends frontControllerApplication
 			'name' => 'Projects',
 			'singular' => 'project',
 			'ib' => 3,
+		),
+		'dissertation' => array (
+			'name' => 'Dissertation',
+			'singular' => 'dissertation',
+			'ib' => 1,
+			'ii' => 1,
 		),
 		'fieldtrips' => array (
 			'name' => 'Fieldtrips',
@@ -913,6 +929,13 @@ class courseEvaluations extends frontControllerApplication
 	}
 	
 	
+	# Dissertation form
+	private function dissertationForm ()
+	{
+		$this->createForm ($this->tables['dissertation']);
+	}
+	
+	
 	# General form
 	private function generalForm ()
 	{
@@ -1359,6 +1382,7 @@ class courseEvaluations extends frontControllerApplication
 			$this->tables['others'] => 'course',
 			$this->tables['courses'] => 'course',
 			$this->tables['lecturers'] => 'lecturer',
+			$this->tables['dissertation'] => 'course',
 			$this->tables['general'] => 'course',
 		);
 		
