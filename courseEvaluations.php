@@ -1609,7 +1609,7 @@ class courseEvaluations extends frontControllerApplication
 		$html  = "\n<p>The following shows the list of submissions for the current year against each user that is registered to have some courses:</p>";
 		$html .= "\n<p>Jump to:</p>";
 		$html .= application::htmlUl ($linkList, 0, 'small');
-		$html .= "\n<p>The <strong>closing date for submissions</strong> is currently set to: <strong>" . date ('jS F Y', strtotime ($this->settings['closing'] . ' GMT') + 1) . '</strong>.</p>';
+		$html .= "\n<p>The <strong>closing date for submissions</strong> is currently set in the <a href=\"{$this->baseUrl}/settings.html\">settings</a> to: <strong>" . date ('jS F Y', strtotime ($this->settings['closing'] . ' GMT') + 1) . '</strong>.</p>';
 		$html .= "\n" . '<!-- Enable table sortability: --><script language="javascript" type="text/javascript" src="/sitetech/sorttable.js"></script>';
 		foreach ($results as $yearGroup => $resultSet) {
 			$yearGroupMoniker = strtolower ($yearGroup);
