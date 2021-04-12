@@ -288,7 +288,7 @@ class courseEvaluations extends frontControllerApplication
 	# Constructor
 	public function main ()
 	{
-		# Do not load these on the feedback page
+		# Do not load these on the generic feedback page
 		if ($this->action == 'feedback') {return;}
 		
 		# Perform data integrity checks or end
@@ -1450,6 +1450,7 @@ class courseEvaluations extends frontControllerApplication
 			if (!array_key_exists ($this->userDetails['yeargroup'], $attributes)) {continue;}
 			
 			# Skip if the user has none of this type (courses/fieldtrips/etc.) available to them
+			if (!isSet ($this->assessing[$type])) {continue;}
 			if (!$this->assessing[$type]) {continue;}
 			
 			# Start a list
