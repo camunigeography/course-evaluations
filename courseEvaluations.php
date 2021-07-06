@@ -202,7 +202,7 @@ class courseEvaluations extends frontControllerApplication
 			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Automatic key',
 			  `opening` datetime NOT NULL COMMENT 'Opening date',
 			  `closing` datetime NOT NULL COMMENT 'Closing date',
-			  `allowViewingDuringSubmitting` int DEFAULT '0' COMMENT 'Allow staff to view results while submission ongoing?',
+			  `allowViewingDuringSubmitting` TINYINT NULL DEFAULT NULL COMMENT 'Allow staff to view results while submission ongoing?',
 			  `introductionHtml` mediumtext COLLATE utf8mb4_unicode_ci COMMENT 'Introduction text',
 			  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Settings';
