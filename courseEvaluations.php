@@ -1559,6 +1559,9 @@ class courseEvaluations extends frontControllerApplication
 			$submissions = (isSet ($totals[$crsidMd5]) ? $totals[$crsidMd5] : 0);
 			$yearGroup = $user['yeargroup'];
 			if ($submissions) {
+				if (!isSet ($totalSubmissions[$yearGroup])) {
+					$totalSubmissions[$yearGroup] = 0;		// Initialise array key
+				}
 				$totalSubmissions[$yearGroup]++;
 				if ($submissions >= $responsesThreshold) {
 					$studentsSufficientlyResponded[$username] = $submissions;
