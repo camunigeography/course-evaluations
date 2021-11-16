@@ -1244,11 +1244,12 @@ class courseEvaluations extends frontControllerApplication
 							AND entries.paper = courses.paper
 						GROUP BY courses.id
 						;";
-				$entrantsResult = $this->databaseConnection->getOne ($entrantsQuery);
-				$entrants[$index] = $entrantsResult['entrants'];
+				#!# Can return false rather than a count
+				$entrantsResult = $this->databaseConnection->getOneField ($entrantsQuery, 'entrants');
+				$entrants[$index] = $entrantsResult;
 			}
 		}
-		
+
 		# Return the entrants
 		return $entrants;
 	}
