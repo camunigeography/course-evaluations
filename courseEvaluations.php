@@ -466,9 +466,12 @@ class courseEvaluations extends frontControllerApplication
 		foreach ($check as $table => $field) {
 			$query = "SELECT DISTINCT {$field} FROM assessments.{$table} WHERE year = '{$this->currentAcademicYear}' AND {$field} NOT IN (SELECT username FROM {$this->settings['globalPeopleDatabase']}.people);";
 			if ($data = $this->databaseConnection->getPairs ($query)) {
-				$error = "The following user(s) present in assessments.{$table}.{$field} were not found in the user database ({$this->settings['globalPeopleDatabase']}.people) :\n\n" . print_r ($data, true);
-				echo $this->reportError ($error);
-				return false;
+				if ($this->action != 'import') {
+					// $error = "The following user(s) present in assessments.{$table}.{$field} were not found in the user database ({$this->settings['globalPeopleDatabase']}.people) :\n\n" . print_r ($data, true);
+					$error = "The following user(s) present in the imported setup data are not matching any known user. Please check for any typos and update the data, or if the usernames are correct, add the users to the Contacts Database.\n\n" . print_r ($data, true);
+					echo $this->reportError ($error);
+					return false;
+				}
 			}
 		}
 		
