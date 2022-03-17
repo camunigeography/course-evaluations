@@ -647,8 +647,8 @@ class courseEvaluations extends frontControllerApplication
 			return false;
 		}
 		
-		# Determine the type of module being assessed of viewed
-		if (!$type = $this->determineType ()) {
+		# Determine the type of module being assessed of viewed; this sets $this->type
+		if (!$this->determineType ()) {
 			$this->page404 ();
 			return false;
 		}
