@@ -1,8 +1,8 @@
 #courseevaluations tr.courseId td, #courseevaluations tr[class*='_lecturer'] td {font-size: 1.2em; background-color: #ccc;}
 #courseevaluations tr._heading1 td {background-color: #f7f7f7;}
 #courseevaluations .assessments.courses tr.heading td {padding: 0; margin: 0;}
-#courseevaluations .assessments.courses tr.heading td h3 {color: #333; font-family: georgia; margin: 0; display: block; background-color: #ccf; font-size: 1.2em; border-top: 4px solid #669; padding: 10px; margin-top: 2em;}
-#courseevaluations .assessments.courses tr.heading td h4 {color: #333; font-family: georgia; margin: 0; display: block; background-color: #ccccd8; font-size: 1.2em; border-top: 2px solid #669; padding: 5px 10px; margin-top: 1.5em; margin-bottom: 5px;}
+#courseevaluations .assessments.courses tr.heading td h3 {color: #333; margin: 0; display: block; background-color: #ccf; font-size: 1.2em; border-top: 4px solid #669; padding: 10px; margin-top: 2em;}
+#courseevaluations .assessments.courses tr.heading td h4 {color: #333; margin: 0; display: block; background-color: #ccccd8; font-size: 1.2em; border-top: 2px solid #669; padding: 5px 10px; margin-top: 1.5em; margin-bottom: 5px;}
 #courseevaluations .assessments.courses tr.heading td p {display: block; background-color: #f7f7f7; margin: 0; padding: 5px 10px;}
 #courseevaluations .assessments.courses tr.heading td p.noteskippable {font-weight: bold; color: white; background-color: #369; margin: 1.5em 0; border-left: 10px solid red;}
 #courseevaluations .assessments.courses tr td.title span.requirednoneditable {display: none;}
