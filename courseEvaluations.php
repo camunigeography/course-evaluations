@@ -98,7 +98,7 @@ class courseEvaluations extends frontControllerApplication
 			  `active` enum('','Yes','No') NOT NULL DEFAULT 'Yes' COMMENT 'Currently active?',
 			  `privilege` enum('Administrator','Restricted administrator') NOT NULL DEFAULT 'Administrator' COMMENT 'Administrator level',
 			  PRIMARY KEY (`username__JOIN__people__people__reserved`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='System administrators';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='System administrators';
 			
 			CREATE TABLE `courses` (
 			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Unique key',
@@ -110,7 +110,7 @@ class courseEvaluations extends frontControllerApplication
 			  `entries` enum('0','1') NOT NULL DEFAULT '0' COMMENT 'Whether the course requires entries (=0) or is instead available for assessment by all students in the year (=1)',
 			  `paper` varchar(255) DEFAULT NULL COMMENT 'Paper number',
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Courses';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Courses';
 			
 			CREATE TABLE `entries` (
 			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Unique key',
@@ -119,7 +119,7 @@ class courseEvaluations extends frontControllerApplication
 			  `yeargroup` enum('IA','IB','II') NOT NULL COMMENT 'Year-group',
 			  `paper` varchar(255) NOT NULL COMMENT 'Paper number',
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Examination entries';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Examination entries';
 			
 			CREATE TABLE `feedbackcourses` (
 			  `id` int NOT NULL AUTO_INCREMENT,
@@ -133,7 +133,7 @@ class courseEvaluations extends frontControllerApplication
 			  `q5improvement` mediumtext COMMENT '5. Do you have any suggestions on how the %type might be improved?',
 			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Feedback from fieldtrips/practicals/projects';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Feedback from fieldtrips/practicals/projects';
 			
 			CREATE TABLE `feedbackgeneral` (
 			  `id` int NOT NULL AUTO_INCREMENT,
@@ -147,7 +147,7 @@ class courseEvaluations extends frontControllerApplication
 			  `q6problemsolving` mediumtext COMMENT '6. As a result of my studies, I feel confident in tackling unfamiliar problems – please comment',
 			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Feedback on general matters';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Feedback on general matters';
 			
 			CREATE TABLE `feedbacklecturers` (
 			  `id` int NOT NULL AUTO_INCREMENT,
@@ -162,7 +162,7 @@ class courseEvaluations extends frontControllerApplication
 			  `q7improvement` mediumtext COMMENT 'Do you have any suggestions on how this set of lectures might be improved?',
 			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Feedback from lecturers';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Feedback from lecturers';
 			
 			CREATE TABLE `feedbackdissertation` (
 			  `id` int NOT NULL AUTO_INCREMENT,
@@ -171,7 +171,7 @@ class courseEvaluations extends frontControllerApplication
 			  `q1overall` enum('','Agree strongly','Agree','Disagree','Disagree strongly','No opinion') NOT NULL COMMENT '1. This set of lectures has given me more confidence in developing a dissertation idea than at the start of the year',
 			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Dissertation feedback';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Dissertation feedback';
 			
 			CREATE TABLE `feedbackothers` (
 			  `id` int NOT NULL AUTO_INCREMENT,
@@ -185,7 +185,7 @@ class courseEvaluations extends frontControllerApplication
 			  `q4improvement` mediumtext COMMENT '4. Do you have any suggestions about how the %type might be improved?',
 			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Feedback from fieldtrips/practicals/projects';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Feedback from fieldtrips/practicals/projects';
 			
 			CREATE TABLE `lecturers` (
 			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Unique key',
@@ -196,7 +196,7 @@ class courseEvaluations extends frontControllerApplication
 			  `subcourseName` varchar(255) DEFAULT NULL COMMENT 'Sub-course name, if relevant',
 			  `lecturer` varchar(255) NOT NULL COMMENT 'Lecturer',
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Lecturing assessments';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Lecturing assessments';
 			
 			CREATE TABLE `settings` (
 			  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Automatic key',
@@ -205,7 +205,7 @@ class courseEvaluations extends frontControllerApplication
 			  `allowViewingDuringSubmitting` TINYINT NULL DEFAULT NULL COMMENT 'Allow staff to view results while submission ongoing?',
 			  `introductionHtml` mediumtext COMMENT 'Introduction text',
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Settings';
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Settings';
 		";
 	}
 	
