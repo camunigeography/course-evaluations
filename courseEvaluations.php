@@ -1694,7 +1694,7 @@ class courseEvaluations extends frontControllerApplication
 				$data = csv::tsvToArray ($unfinalisedData['data']);
 				
 				# Ensure there is some data
-				if (count ($data) < 2) {
+				if (count ($data) < 1) {
 					$form->registerProblem ('data', 'There must be at least one line of data in the pasted spreadsheet block.');
 				}
 				
