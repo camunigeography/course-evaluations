@@ -295,7 +295,7 @@ class assessmentsResults
 					
 					// Show the title
 					$html .= "\n\t<tr>";
-					$html .= "\n\t\t<td class=\"question\">" . htmlspecialchars ($question['text']) . '</td>';
+					$html .= "\n\t\t<td class=\"question\">" . htmlspecialchars (strip_tags ($question['text'])) . '</td>';
 					
 					// If the type is not a selection type, show it as a bullet-pointed list
 					if (!$question['isMultipleChoiceType']) {
