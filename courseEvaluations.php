@@ -133,7 +133,7 @@ class courseEvaluations extends frontControllerApplication
 			  `q5improvement` mediumtext COMMENT '5. Do you have any suggestions on how the %type might be improved?',
 			  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date/time submitted',
 			  PRIMARY KEY (`id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Feedback from fieldtrips/practicals/projects';
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Feedback from courses';
 			
 			CREATE TABLE `feedbackgeneral` (
 			  `id` int NOT NULL AUTO_INCREMENT,
