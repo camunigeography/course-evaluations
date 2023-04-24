@@ -351,7 +351,7 @@ class courseEvaluations extends frontControllerApplication
 		}
 		if ($duplicatesProblemsHtml) {
 			echo $duplicatesProblemsHtml;
-			application::utf8Mail ($this->settings['webmaster'], 'Duplicate data issue in course assessments system', strip_tags ($duplicatesProblemsHtml), "From: {$this->settings['webmaster']}");
+			application::utf8Mail ($this->settings['webmaster'], 'Duplicate data issue in course evaluations system', strip_tags ($duplicatesProblemsHtml), "From: {$this->settings['webmaster']}");
 		}
 	}
 	
@@ -689,7 +689,7 @@ class courseEvaluations extends frontControllerApplication
 				if (count ($this->assessing[$type]) < $attributes[$this->userDetails['yeargroup']]) {
 					#!# Use generic error-throwing stuff
 					$errorMessage = 'Data mismatch: There are not enough available projects for the number to be assessed in this yeargroup.';
-					application::utf8Mail ($this->settings['webmaster'], 'System error in Teaching assessment', wordwrap ($errorMessage), "From: {$this->settings['webmaster']}");
+					application::utf8Mail ($this->settings['webmaster'], 'System error in course evaluations', wordwrap ($errorMessage), "From: {$this->settings['webmaster']}");
 					return false;
 				}
 				
@@ -751,7 +751,7 @@ class courseEvaluations extends frontControllerApplication
 			'displayRestrictions' => false,
 			'databaseConnection' => $this->databaseConnection,
 			'nullText' => '',
-			'formCompleteText' => "Thanks for submitting your assessment. Please now return to the <a href=\"{$this->baseUrl}/\">main overview page</a> (though you can <a href=\"{$_SERVER['REQUEST_URI']}\">edit this submission further</a> if necessary).",
+			'formCompleteText' => "Thanks for submitting your evaluation. Please now return to the <a href=\"{$this->baseUrl}/\">main overview page</a> (though you can <a href=\"{$_SERVER['REQUEST_URI']}\">edit this submission further</a> if necessary).",
 			'linebreaks' => false,
 			'div' => 'ultimateform assessments courses',
 			'titleReplacements' => array ('%type' => $this->types[$this->type]['singular']),
@@ -760,7 +760,7 @@ class courseEvaluations extends frontControllerApplication
 		));
 		
 		# Introduction
-		$form->heading ('p', "This assessment form for <strong>{$courseTitle}</strong> is divided into two sections: (i) the course overall, and (ii) an assessment for each lecturer who has given 4 or more lectures.<br /><br />");
+		$form->heading ('p', "This evaluation form for <strong>{$courseTitle}</strong> is divided into two sections: (i) the course overall, and (ii) an evaluation for each lecturer who has given 4 or more lectures.<br /><br />");
 		
 		# Databind the main course questions
 		$data['course'] = ((isSet ($this->submissions[$this->type]) && isSet ($this->submissions[$this->type][$this->courseId])) ? $this->submissions[$this->type][$this->courseId] : array ());
@@ -790,7 +790,7 @@ class courseEvaluations extends frontControllerApplication
 		# Databind the form for each lecturer
 		$form->heading (3, "Lecturers: {$courseTitle}");
 		$totalLecturers = count ($lecturers);
-		$form->heading ('p', ($totalLecturers == 1 ? 'There is a separate assessment for the lecturer:' : "There is a separate assessment for each of the {$totalLecturers} lecturers:"));
+		$form->heading ('p', ($totalLecturers == 1 ? 'There is a separate evaluation for the lecturer:' : "There is a separate evaluation for each of the {$totalLecturers} lecturers:"));
 		
 		# State that they can skip any lecturer if required
 		if (count ($lecturersBySubcourse) > 1) {
@@ -835,7 +835,7 @@ class courseEvaluations extends frontControllerApplication
 		$form->setOutputScreen ();
 		
 		# Send a backup copy to the administrator
-		$subject = "Teaching assessment: {$this->user} - {$this->userDetails['yeargroup']} - {$this->type} - {$courseUrl}" . ($isUpdate ? ' (update)' : '');
+		$subject = "Course evaluation: {$this->user} - {$this->userDetails['yeargroup']} - {$this->type} - {$courseUrl}" . ($isUpdate ? ' (update)' : '');
 		$form->setOutputEmail ($this->settings['webmaster'], $this->settings['webmaster'], $subject, "From: {$this->settings['webmaster']}");
 		
 		# Obtain the result
@@ -851,7 +851,7 @@ class courseEvaluations extends frontControllerApplication
 		$result["course{$course['id']}"] += $keying;
 		if (!$this->databaseConnection->$action ($this->settings['database'], $this->tables['courses'], $result["course{$course['id']}"], $conditions)) {
 			#!# Use generic error-throwing stuff
-			application::utf8Mail ($this->settings['webmaster'], 'System error in Teaching assessment', wordwrap ("{$action} failed for {$this->settings['database']}.{$this->tables['courses']} with data:\n\n" . print_r ($result["course{$course['id']}"], 1)), "From: {$this->settings['webmaster']}");
+			application::utf8Mail ($this->settings['webmaster'], 'System error in course evaluations', wordwrap ("{$action} failed for {$this->settings['database']}.{$this->tables['courses']} with data:\n\n" . print_r ($result["course{$course['id']}"], 1)), "From: {$this->settings['webmaster']}");
 			echo "<p>There was a problem " . ($isUpdate ? 'updating' : 'inserting') . " the data. The webmaster has been informed.</p>";
 		}
 		
@@ -870,7 +870,7 @@ class courseEvaluations extends frontControllerApplication
 				$conditions = ($isUpdate ? $keying : false);
 				if (!$this->databaseConnection->$action ($this->settings['database'], $this->tables['lecturers'], $result["lecturer{$key}"], $conditions)) {
 					#!# Use generic error-throwing stuff
-					application::utf8Mail ($this->settings['webmaster'], 'System error in Teaching assessment', wordwrap ("{$action} failed for {$this->settings['database']}.{$this->tables['lecturers']} with data:\n\n" . print_r ($result["lecturer{$key}"], 1)), "From: {$this->settings['webmaster']}");
+					application::utf8Mail ($this->settings['webmaster'], 'System error in course evaluations', wordwrap ("{$action} failed for {$this->settings['database']}.{$this->tables['lecturers']} with data:\n\n" . print_r ($result["lecturer{$key}"], 1)), "From: {$this->settings['webmaster']}");
 					echo "<p>There was a problem " . ($isUpdate ? 'updating' : 'inserting') . " the data. The webmaster has been informed.</p>";
 				}
 			}
@@ -987,7 +987,7 @@ class courseEvaluations extends frontControllerApplication
 			'databaseConnection' => $this->databaseConnection,
 			'displayRestrictions' => false,
 			'nullText' => '',
-			'formCompleteText' => "Thanks for submitting your assessment. Please now return to the <a href=\"{$this->baseUrl}/\">main overview page</a> (though you can <a href=\"{$_SERVER['REQUEST_URI']}\">edit this submission further</a> if necessary).",
+			'formCompleteText' => "Thanks for submitting your evaluation. Please now return to the <a href=\"{$this->baseUrl}/\">main overview page</a> (though you can <a href=\"{$_SERVER['REQUEST_URI']}\">edit this submission further</a> if necessary).",
 			'linebreaks' => false,
 			'div' => 'ultimateform assessments',
 			'titleReplacements' => array ('%type' => $this->types[$this->type]['singular']),
@@ -1019,7 +1019,7 @@ class courseEvaluations extends frontControllerApplication
 		));
 		
 		# Send a backup copy to the administrator
-		$subject = "Teaching assessment: {$this->user} - {$this->userDetails['yeargroup']} - {$this->type} - {$_GET['item']}" . ($isUpdate ? ' (update)' : '');
+		$subject = "Course evaluation: {$this->user} - {$this->userDetails['yeargroup']} - {$this->type} - {$_GET['item']}" . ($isUpdate ? ' (update)' : '');
 		$form->setOutputEmail ($this->settings['webmaster'], $this->settings['webmaster'], $subject, "From: {$this->settings['webmaster']}");
 		
 		# Show the results on screen
@@ -1043,7 +1043,7 @@ class courseEvaluations extends frontControllerApplication
 			#!# Use generic error-throwing stuff
 			$errorMessage = "{$action} failed for {$this->settings['database']}.{$table} with data:\n\n" . print_r ($result, 1);
 			$headers = "From: {$this->settings['webmaster']}";
-			application::utf8Mail ($this->settings['webmaster'], 'System error in Teaching assessment', wordwrap ($errorMessage), $headers);
+			application::utf8Mail ($this->settings['webmaster'], 'System error in course evaluations', wordwrap ($errorMessage), $headers);
 			echo "\n<p>There was a problem " . ($isUpdate ? 'updating' : 'inserting') . " the data. The webmaster has been informed.</p>";
 		}
 	}
@@ -1057,8 +1057,8 @@ class courseEvaluations extends frontControllerApplication
 			- Students should never be able to see any results
 			- Results are only viewable after the submission period closes (except for admins)
 			- Webmaster, HoD, HoD's Secretary should see ALL results submitted
-			- Organisers (Undergraduate Director(s), Undergraduate Office Administrator) should see all courses & other bits but NOT the lecturer assessments
-			- Lecturers (including Postgraduate lecturers) should be able to see the results from their own lecturer assessment(s), AND the course assessment for each such course they are teaching on
+			- Organisers (Undergraduate Director(s), Undergraduate Office Administrator) should see all courses & other bits but NOT the lecturer evaluations
+			- Lecturers (including Postgraduate lecturers) should be able to see the results from their own lecturer evaluations(s), AND the course evaluation for each such course they are teaching on
 			- Certain people (in the 'denyResults' list are prevented from viewing their results
 			Course Co-ordinators also need access to each course, but they are almost always going to be Lecturers on that course
 		*/
@@ -1303,7 +1303,7 @@ class courseEvaluations extends frontControllerApplication
 	public function feedback ($id_ignored = NULL, $error_ignored = NULL, $echoHtml = true)
 	{
 		# Add text
-		echo "\n<p class=\"warning\"><em>Please do not use this form for course feedback - this page is only for problems/suggestions on the assessment facility itself so that we can make improvements to it or fix problems.</em></p>";
+		echo "\n<p class=\"warning\"><em>Please do not use this form for course feedback - this page is only for problems/suggestions on the evaluation facility itself so that we can make improvements to it or fix problems.</em></p>";
 		echo "\n<p class=\"warning\"><em>Submissions made through <strong>this</strong> form are <strong>not</strong> anonymous.</em></p>";
 		
 		# Run the standard function
@@ -1497,7 +1497,7 @@ class courseEvaluations extends frontControllerApplication
 		$html .= "\n<br /><br /><p><strong>All submissions are anonymous</strong> - your Raven identification is used only for security and to enable you to update existing submissions. Those analysing the results will <strong>not</strong> be able to obtain your identity (a token matching system is used to avoid storing usernames against submissions).</p>";
 		
 		# Add a feedback link for the system itself
-		$html .= "<p class=\"feedback\">(The Webmaster would also welcome any <a href=\"{$this->baseUrl}/feedback.html\">feedback or ideas about this course assessment system</a> itself, if you have any.)</p>";
+		$html .= "<p class=\"feedback\">(The Webmaster would also welcome any <a href=\"{$this->baseUrl}/feedback.html\">feedback or ideas about this course evaluation system</a> itself, if you have any.)</p>";
 		
 		# Return the HTML
 		return $html;
@@ -1644,7 +1644,7 @@ class courseEvaluations extends frontControllerApplication
 	}
 	
 	
-	# Function to help import assessment details
+	# Function to help import evaluation details
 	public function import ()
 	{
 		# Get the undergraduate yeargroups
