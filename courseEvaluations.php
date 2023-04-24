@@ -464,10 +464,10 @@ class courseEvaluations extends frontControllerApplication
 		#!# Get rid of the anomaly between lecturer/crsid
 		$check = array ('lecturers' => 'lecturer', 'entries' => 'crsid');
 		foreach ($check as $table => $field) {
-			$query = "SELECT DISTINCT {$field} FROM assessments.{$table} WHERE year = '{$this->currentAcademicYear}' AND {$field} NOT IN (SELECT username FROM {$this->settings['globalPeopleDatabase']}.people);";
+			$query = "SELECT DISTINCT {$field} FROM {$this->settings['database']}.{$table} WHERE year = '{$this->currentAcademicYear}' AND {$field} NOT IN (SELECT username FROM {$this->settings['globalPeopleDatabase']}.people);";
 			if ($data = $this->databaseConnection->getPairs ($query)) {
 				if ($this->action != 'import') {
-					// $error = "The following user(s) present in assessments.{$table}.{$field} were not found in the user database ({$this->settings['globalPeopleDatabase']}.people) :\n\n" . print_r ($data, true);
+					// $error = "The following user(s) present in {$this->settings['database']}.{$table}.{$field} were not found in the user database ({$this->settings['globalPeopleDatabase']}.people) :\n\n" . print_r ($data, true);
 					$error = "The following user(s) present in the imported setup data are not matching any known user. Please check for any typos and update the data, or if the usernames are correct, add the users to the Contacts Database.\n\n" . print_r ($data, true);
 					echo $this->reportError ($error);
 					return false;
@@ -479,8 +479,8 @@ class courseEvaluations extends frontControllerApplication
 		#!# Need to eradicate direct lookup of staffType here - move to isUndergraduate as used elsewhere in this class
 		$query = "SELECT
 			DISTINCT crsid
-			FROM assessments.entries
-			LEFT OUTER JOIN {$this->settings['globalPeopleDatabase']}.people ON assessments.entries.crsid = {$this->settings['globalPeopleDatabase']}.people.username
+			FROM {$this->settings['database']}.entries
+			LEFT OUTER JOIN {$this->settings['globalPeopleDatabase']}.people ON {$this->settings['database']}.entries.crsid = {$this->settings['globalPeopleDatabase']}.people.username
 			WHERE
 				year = '{$this->currentAcademicYear}'
 				AND (
@@ -492,21 +492,21 @@ class courseEvaluations extends frontControllerApplication
 				)
 		;";
 		if ($data = $this->databaseConnection->getPairs ($query)) {
-			$error = "The following user(s) present in assessments.{$table}.{$field} were not marked as undergraduates in the user database ({$this->settings['globalPeopleDatabase']}.people) :\n\n" . print_r ($data, true);
+			$error = "The following user(s) present in {$this->settings['database']}.{$table}.{$field} were not marked as undergraduates in the user database ({$this->settings['globalPeopleDatabase']}.people) :\n\n" . print_r ($data, true);
 			//echo $this->reportError ($error);
 			//return false;
 		}
 		
 		/*
-		#!# This is disabled as it is very slow - find a way to find the intersection of assessments.entries.crsid and assessments.lecturers.lecturer. This is probably slow because of the use of IN() rather than a join or subtable.
+		#!# This is disabled as it is very slow - find a way to find the intersection of {$this->settings['database']}.entries.crsid and {$this->settings['database']}.lecturers.lecturer. This is probably slow because of the use of IN() rather than a join or subtable.
 		# Check that no-one is both a student is also a lecturer
 		$query = "
-			SELECT DISTINCT crsid AS user FROM assessments.entries WHERE year = '{$this->currentAcademicYear}' AND crsid IN (SELECT lecturer FROM assessments.lecturers WHERE year = '{$this->currentAcademicYear}')
+			SELECT DISTINCT crsid AS user FROM {$this->settings['database']}.entries WHERE year = '{$this->currentAcademicYear}' AND crsid IN (SELECT lecturer FROM {$this->settings['database']}.lecturers WHERE year = '{$this->currentAcademicYear}')
 			UNION
-			SELECT DISTINCT lecturer AS user FROM assessments.lecturers WHERE year = '{$this->currentAcademicYear}' AND lecturer IN (SELECT crsid FROM assessments.entries WHERE year = '{$this->currentAcademicYear}')
+			SELECT DISTINCT lecturer AS user FROM {$this->settings['database']}.lecturers WHERE year = '{$this->currentAcademicYear}' AND lecturer IN (SELECT crsid FROM {$this->settings['database']}.entries WHERE year = '{$this->currentAcademicYear}')
 		";
 		if ($data = $this->databaseConnection->getPairs ($query, true)) {
-			$error = "The following user(s) appear as both an undergraduate in assessments.entries.crsid and as a lecturer in assessments.lecturers.lecturer :\n\n" . print_r ($data, true);
+			$error = "The following user(s) appear as both an undergraduate in {$this->settings['database']}.entries.crsid and as a lecturer in {$this->settings['database']}.lecturers.lecturer :\n\n" . print_r ($data, true);
 			echo $this->reportError ($error);
 			return false;
 		}
@@ -1517,10 +1517,10 @@ class courseEvaluations extends frontControllerApplication
 				yeargroup,
 				COUNT(crsid) AS 'Course entries',
 				colleges.college
-			FROM assessments.entries
-			LEFT OUTER JOIN {$this->settings['globalPeopleDatabase']}.people ON assessments.entries.crsid = {$this->settings['globalPeopleDatabase']}.people.username
+			FROM {$this->settings['database']}.entries
+			LEFT OUTER JOIN {$this->settings['globalPeopleDatabase']}.people ON {$this->settings['database']}.entries.crsid = {$this->settings['globalPeopleDatabase']}.people.username
 			LEFT OUTER JOIN {$this->settings['globalPeopleDatabase']}.colleges ON {$this->settings['globalPeopleDatabase']}.college__JOIN__people__colleges__reserved = {$this->settings['globalPeopleDatabase']}.colleges.id
-			WHERE assessments.entries.year = '{$this->currentAcademicYear}'
+			WHERE {$this->settings['database']}.entries.year = '{$this->currentAcademicYear}'
 			GROUP BY crsid, yeargroup	/* yeargroup to avoid 'Expression #5 of SELECT list is not in GROUP BY clause' */
 			ORDER BY yeargroup, surname, forename
 		;";
@@ -1532,10 +1532,10 @@ class courseEvaluations extends frontControllerApplication
 		# Get the counts and rearrange them as user => total
 		$query = "SELECT
 				user,
-				COUNT(assessments.{$this->tables['courses']}.id) as total
-			FROM assessments.{$this->tables['courses']}
-			LEFT OUTER JOIN assessments.courses ON assessments.{$this->tables['courses']}.courseId = assessments.courses.id
-			WHERE assessments.courses.year = '{$this->currentAcademicYear}'
+				COUNT({$this->settings['database']}.{$this->tables['courses']}.id) as total
+			FROM {$this->settings['database']}.{$this->tables['courses']}
+			LEFT OUTER JOIN {$this->settings['database']}.courses ON {$this->settings['database']}.{$this->tables['courses']}.courseId = {$this->settings['database']}.courses.id
+			WHERE {$this->settings['database']}.courses.year = '{$this->currentAcademicYear}'
 			GROUP BY user
 			ORDER BY total;";
 		if (!$data = $this->databaseConnection->getData ($query)) {
@@ -1579,7 +1579,7 @@ class courseEvaluations extends frontControllerApplication
 					$results[$username]['Course/practical submissions'] = "<span style=\"color: red\"><strong>{$results[$username]['Course/practical submissions']}</strong></span>";
 					$results[$username]['crsid'] = "<span style=\"color: red\"><strong>{$results[$username]['crsid']}</strong></span>";
 					break;
-				/*	// #!# Reinstate this when the use of assessments.courses.entries = 1 is scrapped
+				/*	// #!# Reinstate this when the use of {$this->settings['database']}.courses.entries = 1 is scrapped
 				case ($results[$username]['Course/practical submissions'] >= $results[$username]['Course entries']):
 					$results[$username]['Course/practical submissions'] = "<span style=\"color: green\"><strong>{$results[$username]['Course/practical submissions']}</strong></span>";
 					break;
@@ -1588,7 +1588,7 @@ class courseEvaluations extends frontControllerApplication
 				*/
 			}
 			unset ($results[$username]['crsidMd5']);
-			unset ($results[$username]['Course entries']);	// #!# Remove this when the use of assessments.courses.entries = 1 is scrapped
+			unset ($results[$username]['Course entries']);	// #!# Remove this when the use of {$this->settings['database']}.courses.entries = 1 is scrapped
 		}
 		
 		# Pick a random person
@@ -1843,8 +1843,8 @@ class courseEvaluations extends frontControllerApplication
 				DISTINCT crsid,
 				CONCAT_WS(' ', people.forename, people.surname) AS name,
 				yeargroup
-			FROM assessments.entries
-			LEFT OUTER JOIN {$this->settings['globalPeopleDatabase']}.people ON assessments.entries.crsid = {$this->settings['globalPeopleDatabase']}.people.username
+			FROM {$this->settings['database']}.entries
+			LEFT OUTER JOIN {$this->settings['globalPeopleDatabase']}.people ON {$this->settings['database']}.entries.crsid = {$this->settings['globalPeopleDatabase']}.people.username
 			WHERE entries.year = '{$this->currentAcademicYear}'
 			ORDER BY yeargroup, crsid
 		;";
