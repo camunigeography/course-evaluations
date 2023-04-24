@@ -757,6 +757,7 @@ class courseEvaluations extends frontControllerApplication
 			'titleReplacements' => array ('%type' => $this->types[$this->type]['singular']),
 			'rows' => 6,
 			'cols' => 50,
+			'unsavedDataProtection' => true,
 		));
 		
 		# Introduction
