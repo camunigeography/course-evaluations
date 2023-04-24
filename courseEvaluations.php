@@ -10,8 +10,8 @@ class courseEvaluations extends frontControllerApplication
 	{
 		return $defaults = array (
 			'hostname' => 'localhost',
-			'username' => 'assessments',
-			'database' => 'assessments',
+			'username' => 'courseevaluations',
+			'database' => 'courseevaluations',
 			'globalPeopleDatabase' => 'people',
 			'div' => 'courseevaluations',
 			'table' => 'people',
