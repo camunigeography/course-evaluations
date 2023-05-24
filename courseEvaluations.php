@@ -275,7 +275,9 @@ class courseEvaluations extends frontControllerApplication
 		$this->currentAcademicYear = timedate::academicYear ($this->settings['yearStartMonth'], $asRangeString = true);
 		
 		# Override the current year if fixed
-		if ($this->settings['overrideYear']) {$this->currentAcademicYear = $this->settings['overrideYear'];}
+		if ($this->settings['overrideYear']) {
+				$this->currentAcademicYear = $this->settings['overrideYear'];
+		}
 		
 		# Get the user details
 		$this->userDetails = $this->getUserDetails ();
@@ -290,6 +292,11 @@ class courseEvaluations extends frontControllerApplication
 	{
 		# Do not load these on the generic feedback page
 		if ($this->action == 'feedback') {return;}
+		
+		# Version tables by year if required
+		if ($this->action != 'results') {	// Results can switch year so should run year versioning itself
+			$this->yearVersioning ($this->currentAcademicYear);
+		}
 		
 		# Perform data integrity checks or end
 		if (!$this->userDataIntegrity ()) {return false;}
@@ -320,6 +327,13 @@ class courseEvaluations extends frontControllerApplication
 		if ($this->userIsAdministrator) {
 			$this->runDuplicatesCheck ();
 		}
+	}
+	
+	
+	# Overrides for particular years
+	private function yearVersioning ($currentAcademicYear)
+	{
+		// Any overrides would go here
 	}
 	
 	
@@ -395,6 +409,9 @@ class courseEvaluations extends frontControllerApplication
 		
 		# Set the selected year
 		$this->currentAcademicYear = $_GET['academicyear'];
+		
+		# Version tables by year if required
+		$this->yearVersioning ($this->currentAcademicYear);
 		
 		# Show a droplist of years
 		$html .= $this->yearsDroplist ($years, $this->currentAcademicYear);
@@ -1057,7 +1074,7 @@ class courseEvaluations extends frontControllerApplication
 			SECURITY MODEL:
 			- Students should never be able to see any results
 			- Results are only viewable after the submission period closes (except for admins)
-			- Webmaster, HoD, HoD's Secretary should see ALL results submitted
+			- HoD, HoD's Secretary, plus Webmaster (for debugging purposes only) should see ALL results submitted
 			- Organisers (Undergraduate Director(s), Undergraduate Office Administrator) should see all courses & other bits but NOT the lecturer evaluations
 			- Lecturers (including Postgraduate lecturers) should be able to see the results from their own lecturer evaluations(s), AND the course evaluation for each such course they are teaching on
 			- Certain people (in the 'denyResults' list are prevented from viewing their results
@@ -1120,7 +1137,7 @@ class courseEvaluations extends frontControllerApplication
 			# Get the headings for each table
 			$questionsByGroup[$group] = $this->databaseConnection->getHeadings ($this->settings['database'], $table);
 			$questionsByGroup[$group] = $this->overrideQuestionLabels ($group, $questionsByGroup[$group], 'results');
-
+			
 			# Get the fields for this table
 			$fieldsByGroup[$group] = $this->databaseConnection->getFields ($this->settings['database'], $table);
 			
@@ -1174,7 +1191,6 @@ class courseEvaluations extends frontControllerApplication
 				AND lecturers.course = courses.url			/* These three basically act as the combined key between lecturers and courses */
 				AND lecturers.year = courses.year
 				AND lecturers.yeargroup = courses.yeargroup
-				
 			" : '') . "
 			ORDER BY year, yeargroup, type, paperNumberNatsorted, id, title
 		;";
@@ -1253,7 +1269,7 @@ class courseEvaluations extends frontControllerApplication
 				$entrants[$index] = $entrantsResult;
 			}
 		}
-
+		
 		# Return the entrants
 		return $entrants;
 	}
