@@ -1073,7 +1073,7 @@ class courseEvaluations extends frontControllerApplication
 	{
 		/*
 			SECURITY MODEL:
-			- Students should never be able to see any results
+			- Students should never be able to see any results, which is implemented at top level using $this->userHasResultsAccess
 			- Results are only viewable after the submission period closes (except for admins)
 			- HoD, HoD's Secretary, plus Webmaster (for debugging purposes only) should see ALL results submitted
 			- Organisers (Undergraduate Director(s), Undergraduate Office Administrator) should see all courses & other bits but NOT the lecturer evaluations
@@ -1082,15 +1082,16 @@ class courseEvaluations extends frontControllerApplication
 			Course Co-ordinators also need access to each course, but they are almost always going to be Lecturers on that course
 		*/
 		
-		# Set the academic year
-		$this->currentAcademicYear = $selectedAcademicYear;
-		
 		# Prevent viewing results if required (though admins can always see)
-		if (!$this->resultsViewable ()) {
+		if (!$this->resultsViewable ($selectedAcademicYear)) {
 			$dateFormatted = date ('jS F Y', strtotime ($this->settings['closing'] . ' GMT') + 1);
 			$html = "\n<p class=\"warning\">Results are not viewable until {$dateFormatted}.</p>";
 			return $html;
 		}
+		
+		# Set the academic year
+		#!# Use of this needs to be turned into a local variable so that usage is explicit not implicit within child functions
+		$this->currentAcademicYear = $selectedAcademicYear;
 		
 		# End if the user is in the list of denied users
 		if (in_array ($this->user, $this->settings['denyResults'])) {
@@ -1158,10 +1159,15 @@ class courseEvaluations extends frontControllerApplication
 	
 	
 	# Function to determine if the results are viewable
-	private function resultsViewable ()
+	private function resultsViewable ($selectedAcademicYear)
 	{
 		# Admins can always see the results
 		if ($this->userDetails['type'] == 'administrator') {
+			return true;
+		}
+		
+		# If the selected academic year is earlier than the current academic year, always allow
+		if ($selectedAcademicYear < $this->currentAcademicYear) {
 			return true;
 		}
 		
