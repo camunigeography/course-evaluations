@@ -1085,13 +1085,11 @@ class courseEvaluations extends frontControllerApplication
 		# Set the academic year
 		$this->currentAcademicYear = $selectedAcademicYear;
 		
-		# Results are only viewable after the submission period closes (except for admins)
-		if (!$this->settings['allowViewingDuringSubmitting']) {
-			if (!$this->resultsViewable ()) {
-				$dateFormatted = date ('jS F Y', strtotime ($this->settings['closing'] . ' GMT') + 1);
-				$html = "\n<p class=\"warning\">Results are not viewable until {$dateFormatted}.</p>";
-				return $html;
-			}
+		# Prevent viewing results if required (though admins can always see)
+		if (!$this->resultsViewable ()) {
+			$dateFormatted = date ('jS F Y', strtotime ($this->settings['closing'] . ' GMT') + 1);
+			$html = "\n<p class=\"warning\">Results are not viewable until {$dateFormatted}.</p>";
+			return $html;
 		}
 		
 		# End if the user is in the list of denied users
@@ -1164,6 +1162,11 @@ class courseEvaluations extends frontControllerApplication
 	{
 		# Admins can always see the results
 		if ($this->userDetails['type'] == 'administrator') {
+			return true;
+		}
+		
+		# If allowed during submitting, always see the results
+		if ($this->settings['allowViewingDuringSubmitting']) {
 			return true;
 		}
 		
