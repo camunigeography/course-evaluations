@@ -262,7 +262,7 @@ class courseEvaluations extends frontControllerApplication
 	);
 	
 	# Fields to exclude in subcourse mode
-	private $subcourseModeExcludeFields = array ('q1howmany', 'q2overall', 'q3stimulating', 'q4presentation', 'q5readinglists', );
+	private $subcourseModeExcludeFields = array ('q1howmany', 'q3stimulating', 'q4presentation', 'q5readinglists', );
 	
 	
 	# Pre-actions logic
