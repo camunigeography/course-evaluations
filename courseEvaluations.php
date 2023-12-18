@@ -408,16 +408,16 @@ class courseEvaluations extends frontControllerApplication
 		}
 		
 		# Set the selected year
-		$this->currentAcademicYear = $_GET['academicyear'];
+		$selectedAcademicYear = $_GET['academicyear'];
 		
 		# Version tables by year if required
-		$this->yearVersioning ($this->currentAcademicYear);
+		$this->yearVersioning ($selectedAcademicYear);
 		
 		# Show a droplist of years
-		$html .= $this->yearsDroplist ($years, $this->currentAcademicYear);
+		$html .= $this->yearsDroplist ($years, $selectedAcademicYear);
 		
 		# Show results
-		$html .= $this->showResults ();
+		$html .= $this->showResults ($selectedAcademicYear);
 		
 		# Show the HTML
 		echo $html;
@@ -470,7 +470,8 @@ class courseEvaluations extends frontControllerApplication
 	public function export ()
 	{
 		# Show results
-		echo $this->showResults ($csv = true);
+		#!# Academic year currently fixed at current year
+		echo $this->showResults ($this->currentAcademicYear, $csv = true);
 	}
 	
 	
@@ -1068,7 +1069,7 @@ class courseEvaluations extends frontControllerApplication
 	
 	
 	# Function to show the results
-	private function showResults ($csvMode = false)
+	private function showResults ($selectedAcademicYear, $csvMode = false)
 	{
 		/*
 			SECURITY MODEL:
@@ -1080,6 +1081,9 @@ class courseEvaluations extends frontControllerApplication
 			- Certain people (in the 'denyResults' list are prevented from viewing their results
 			Course Co-ordinators also need access to each course, but they are almost always going to be Lecturers on that course
 		*/
+		
+		# Set the academic year
+		$this->currentAcademicYear = $selectedAcademicYear;
 		
 		# Results are only viewable after the submission period closes (except for admins)
 		if (!$this->settings['allowViewingDuringSubmitting']) {
