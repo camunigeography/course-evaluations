@@ -1240,7 +1240,7 @@ class courseEvaluations extends frontControllerApplication
 					AND lecturers.yeargroup = courses.yeargroup
 				AND lecturers.lecturer = {$this->settings['globalPeopleDatabase']}.people.username
 				" . ((($this->userDetails['type'] == 'lecturer') || ($this->userDetails['type'] == 'organiser')) ? "AND lecturers.lecturer = '{$this->user}'" : '') . "
-			ORDER BY year, yeargroup, type, paperNumberNatsorted, course, subcourseId, lecturer
+			ORDER BY year, yeargroup, type, paperNumberNatsorted, course, subcourseId, lecturer /* Could be changed to lecturer.id if delivery order rather than forename order is preferred in the results screen */
 		;";
 		
 		# Get the data
