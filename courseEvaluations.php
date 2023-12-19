@@ -1291,7 +1291,7 @@ class courseEvaluations extends frontControllerApplication
 	# Function to get the submissions for each course
 	private function getSubmissionsByCourseId ($group, $results, $table)
 	{
-		#!# Inefficient version - needs to be fixed as runs SQL statements in a loop; but version afterwards fails to get the lecturer results for some reason
+		#!# Inefficient version - needs to be fixed as runs SQL statements in a loop; but version afterwards fails to get the lecturer results for some reason (presumably because lecturerId would not match IN(courseIds))
 		# Get the submissions for each course
 		$submissions = array ();
 		foreach ($results as $index => $course) {
