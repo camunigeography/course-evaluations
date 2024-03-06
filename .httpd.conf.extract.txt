@@ -4,12 +4,12 @@
 #   
 #   # Course evaluations
 #   Include /path/to/course-evaluations/.httpd.conf.extract.txt
-#   Use MacroCourseEvaluations "/evaluations" "Course evaluations"
+#   Use MacroCourseEvaluations "/evaluations"
 
 
-<Macro MacroCourseEvaluations $applicationBaseUrl $description>
+<Macro MacroCourseEvaluations $applicationBaseUrl>
 	
-	Use MacroFrontControllerApplication "$applicationBaseUrl/" "$description"
+	Use MacroFrontControllerApplication "$applicationBaseUrl/" "Course evaluations"
 	
 	RewriteEngine on
 	RewriteRule ^$applicationBaseUrl/(rates|export|import).html$ $applicationBaseUrl/index.html?action=$1 [L]
