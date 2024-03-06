@@ -16,7 +16,7 @@ function userNameCallback ($username, $returnFalseIfGone)
 
 
 # Run the application with the specified settings
-require_once ('courseEvaluations.php');
+require_once ('vendor/autoload.php');
 new courseEvaluations ($settings);
 
 ?>

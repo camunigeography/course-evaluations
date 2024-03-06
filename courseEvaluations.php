@@ -2,7 +2,6 @@
 
 
 # Class to provide a course evaluations system
-require_once ('frontControllerApplication.php');
 class courseEvaluations extends frontControllerApplication
 {
 	# Specify available arguments as defaults or as NULL (to represent a required argument)
@@ -268,9 +267,6 @@ class courseEvaluations extends frontControllerApplication
 	# Pre-actions logic
 	public function mainPreActions ()
 	{
-		# Load additional required libraries
-		require_once ('timedate.php');
-		
 		# Determine the current academic year, e.g. '2020-2021'
 		$this->currentAcademicYear = timedate::academicYear ($this->settings['yearStartMonth'], $asRangeString = true);
 		
@@ -1717,7 +1713,6 @@ class courseEvaluations extends frontControllerApplication
 		));
 		
 		# Do checks on the pasted data
-		require_once ('csv.php');
 		if ($unfinalisedData = $form->getUnfinalisedData ()) {
 			if ($unfinalisedData['type'] && $unfinalisedData['data']) {
 				

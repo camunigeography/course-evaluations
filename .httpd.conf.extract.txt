@@ -4,14 +4,10 @@
 #   
 #   # Course evaluations
 #   Include /path/to/course-evaluations/.httpd.conf.extract.txt
-#   Use MacroCourseEvaluations "/evaluations" "Course evaluations" "/path/to/course-evaluations/:/path/to/php/libraries/"
+#   Use MacroCourseEvaluations "/evaluations" "Course evaluations"
 
 
-<Macro MacroCourseEvaluations $applicationBaseUrl $description $includePath>
-	
-	<Location $applicationBaseUrl>
-		php_value include_path "$includePath"
-	</Location>
+<Macro MacroCourseEvaluations $applicationBaseUrl $description>
 	
 	Use MacroFrontControllerApplication "$applicationBaseUrl/" "$description"
 	
