@@ -91,8 +91,10 @@ class assessmentsResults
 			$data[$index]['questions'] = array ();
 			
 			# Add the question texts to the array
+			#!# Probably incomplete list of general question names - needs checking
+			$overallQuestionFieldnamesIncluded = array ('improvement');
 			foreach ($questions as $question => $value) {
-				if (substr ($question, 0, 1) != 'q') {continue;}	// Ignore fields which are not a question, e.g. ignore courseId but not q1howmany
+				if (substr ($question, 0, 1) != 'q' && !in_array ($question, $overallQuestionFieldnamesIncluded)) {continue;}	// Ignore fields which are not a question, e.g. ignore courseId but not q1howmany
 				if (isSet ($course['excludeQuestions']) && in_array ($question, $course['excludeQuestions'])) {continue;}	// Ignore questions to exclude (e.g. due to subcourse for lecturers)
 				if (isSet ($this->types[$group])) {
 					$value = str_replace ('%type', $this->types[$group]['singular'], $value);
