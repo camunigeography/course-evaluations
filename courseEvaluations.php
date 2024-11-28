@@ -19,7 +19,7 @@ class courseEvaluations extends frontControllerApplication
 			'tabUlClass' => 'tabsflat',
 			'authentication' => true,
 			'feedback' => false,
-			'yearStartMonth' => 12,
+			'yearStartMonth' => 10,
 			'includePieCharts' => true,
 			'piechartStub' => '/images/piechart',
 			'pieChartWidth' => 250,
@@ -1681,7 +1681,7 @@ class courseEvaluations extends frontControllerApplication
 			'formCompleteText' => false,
 			'reappear'	=> true,
 		));
-		$form->heading ('p', 'To import data for the yera, arrange the data in a spreadsheet as per the fields listed below, then copy the block of cells into the box below. Repeat this for each of the datasets shown below. Do this using the Test button first, then repeat with the Import option instead.');
+		$form->heading ('p', 'To import data for the year, arrange the data in a spreadsheet as per the fields listed below, then copy the block of cells into the box below. Repeat this for each of the datasets shown below. Do this using the Test button first, then repeat with the Import option instead.');
 		$form->radiobuttons (array (
 			'name'		=> 'action',
 			'title'		=> 'Action',
