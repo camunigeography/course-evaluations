@@ -433,7 +433,8 @@ class courseEvaluations extends frontControllerApplication
 		$years = $this->databaseConnection->getPairs ($query);
 		
 		# Ensure the current academic year is present
-		$years = array_merge ($years, array ($this->currentAcademicYear));
+		$years = array_unique (array_merge ($years, array ($this->currentAcademicYear)));
+		sort ($years);
 		
 		# Return the list
 		return ($years);
