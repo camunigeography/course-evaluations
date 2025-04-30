@@ -581,7 +581,7 @@ class courseEvaluations extends frontControllerApplication
 		if ($userType != 'student') {return NULL;}
 		
 		# Extract the year from the course, e.g. 'undergraduate2020' or 'undergraduate2020education' are '2020'
-		if (!preg_match ('([0-9]{4})', $person['course__JOIN__people__courses__reserved'], $matches)) {return false;}
+		if (!preg_match ('([0-9]{4})', $person['course'], $matches)) {return false;}
 		$userStartYear = $matches[0];
 		
 		# Get the groups
@@ -624,8 +624,8 @@ class courseEvaluations extends frontControllerApplication
 			return 'lecturer';
 		}
 		
-		# Graduates who teach
-		if ($user['isGraduate']) {
+		# Postgraduates who teach
+		if ($user['isPostgraduate']) {
 			return 'lecturer';
 		}
 		
