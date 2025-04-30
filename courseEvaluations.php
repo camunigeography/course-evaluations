@@ -29,7 +29,7 @@ class courseEvaluations extends frontControllerApplication
 			'overrideYear' => false,
 			'overrideUserYeargroup' => false,
 			'additionalLecturersResultsAccess' => array (),
-			'userNameCallback' => 'userNameCallback',			// Callback function
+			'userCallback' => NULL,			// Callback function
 			'overrideQuestionLabels' => array (),		// Array of academicYear => array (table => array (questionId => questionTitle))
 			'userSwitcherUsers' => array ($this, 'userSwitcherUsers'),
 			'userSwitcherOnSwitch' => array ($this, 'userSwitcherOnSwitch'),
@@ -542,8 +542,8 @@ class courseEvaluations extends frontControllerApplication
 		}
 		
 		# Get the user via the supplied callback
-		$userNameCallback = $this->settings['userNameCallback'];
-		$person = $userNameCallback ($this->user, $returnFalseIfGone);
+		$userCallback = $this->settings['userCallback'];
+		$person = $userCallback ($this->user, $returnFalseIfGone);
 		
 		# Determine the user type or end
 		if (!$userType = $this->userType ($person)) {

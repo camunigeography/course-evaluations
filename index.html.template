@@ -5,11 +5,11 @@ $settings = array (
 	'hostname' => 'localhost',
 	'username' => 'the_username',
 	'password' => 'the_password',
-	'userNameCallback' => 'userNameCallback',
+	'userCallback' => 'getUser',
 );
 
-# Callback function to get the full name of a user
-function userNameCallback ($username, $returnFalseIfGone)
+# Callback function to get the details of a user
+function getUser ($username, $returnFalseIfGone)
 {
 	// Function returning array of user data
 }
