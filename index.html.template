@@ -8,7 +8,7 @@ $settings = array (
 	'userCallback' => 'getUser',
 );
 
-# Callback function to get the details of a user
+# Callback function to get the details of a user; this will only be called when a user is logged in
 function getUser ($username, $returnFalseIfGone)
 {
 	// Function returning array of user data

@@ -535,6 +535,9 @@ class courseEvaluations extends frontControllerApplication
 	# Function to get user details
 	private function getUserDetails ()
 	{
+		# No details if not yet logged in
+		if (!$this->user) {return false;}
+		
 		# Get the user (who must be 'active') from the master database or end
 		$returnFalseIfGone = true;
 		if (in_array ($this->user, $this->settings['additionalLecturersResultsAccess'])) {
