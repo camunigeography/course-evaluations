@@ -1685,7 +1685,7 @@ class courseEvaluations extends frontControllerApplication
 			'formCompleteText' => false,
 			'reappear'	=> true,
 		));
-		$form->heading ('p', 'To import data for the year, arrange the data in a spreadsheet as per the fields listed below, then copy the block of cells into the box below. Repeat this for each of the datasets shown below. Do this using the Test button first, then repeat with the Import option instead.');
+		$form->heading ('p', 'To import data for the year, arrange the data in a spreadsheet as per the fields listed below, then copy the block of cells into the box below. Repeat this for each of the datasets shown below. Do this using the Test button first, then repeat with the Import option instead.</p><p>Reimporting will delete the existing data for the year for the type being uploaded, which enables you to correct errors in advance of the system opening to students.');
 		$form->radiobuttons (array (
 			'name'		=> 'action',
 			'title'		=> 'Action',
