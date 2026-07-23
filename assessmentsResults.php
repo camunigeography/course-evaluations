@@ -231,7 +231,7 @@ class assessmentsResults
 		
 		# Start with text
 		if ($this->userIsAdministrator) {
-			$html .= "\n<p>You have access to the following results" . ($this->enableExportLink ? " (or <a href=\"{$this->baseUrl}/export.html\" target=\"_blank\">export this data</a>)" : '') . ':</p>';
+			$html .= "\n<p>You have access to the following results" . ($this->enableExportLink ? " (or <a href=\"{$this->baseUrl}/export.html\" target=\"_blank\">export data summary for pasting into Excel</a>)" : '') . ':</p>';
 		}
 		
 		# Add a button to hide numeric chart results, to enable textual answers to be selected (for copy-and-paste) easily
