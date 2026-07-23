@@ -11,13 +11,14 @@ class assessmentsResults
 	
 	
 	# Constructor
-	public function __construct ($settings, $baseUrl, $userIsAdministrator, $types, $courseDetailsByGroup, $questionsByGroup, $fieldsByGroup, $submissionsByCourseIdByGroup, $entrantsByGroup, $currentAcademicYear, $csvMode = false)
+	public function __construct ($settings, $baseUrl, $userIsAdministrator, $types, $courseDetailsByGroup, $questionsByGroup, $fieldsByGroup, $submissionsByCourseIdByGroup, $entrantsByGroup, $currentAcademicYear, $csvMode = false, $enableExportLink = true)
 	{
 		# Global the settings
 		$this->baseUrl = $baseUrl;
 		$this->types = $types;
 		$this->currentAcademicYear = $currentAcademicYear;
 		$this->userIsAdministrator = $userIsAdministrator;
+		$this->enableExportLink = $enableExportLink;
 
 		# Debugging
 		//echo '---'; application::dumpData ($courseDetailsByGroup);
@@ -230,7 +231,7 @@ class assessmentsResults
 		
 		# Start with text
 		if ($this->userIsAdministrator) {
-			$html .= "\n<p>You have access to the following results (or <a href=\"{$this->baseUrl}/export.html\" target=\"_blank\">export this data</a>):</p>";
+			$html .= "\n<p>You have access to the following results" . ($this->enableExportLink ? " (or <a href=\"{$this->baseUrl}/export.html\" target=\"_blank\">export this data</a>)" : '') . ':</p>';
 		}
 		
 		# Add a button to hide numeric chart results, to enable textual answers to be selected (for copy-and-paste) easily
