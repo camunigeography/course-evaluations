@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ca98ac828c9ee0d501da0d17c045e409",
+    "content-hash": "c8cccf6342401c48a9a675133fd1891c",
     "packages": [
         {
             "name": "camunigeography/camunidata",
@@ -120,16 +120,16 @@
         },
         {
             "name": "libpurecontent/application",
-            "version": "v1.9.11",
+            "version": "v1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/libpurecontent/application.git",
-                "reference": "96e4202dcf20deb4ee32014ddb93bb4e65cd5f23"
+                "reference": "7d76925641f19b7138bde3b152e2f85d94db8042"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/libpurecontent/application/zipball/96e4202dcf20deb4ee32014ddb93bb4e65cd5f23",
-                "reference": "96e4202dcf20deb4ee32014ddb93bb4e65cd5f23",
+                "url": "https://api.github.com/repos/libpurecontent/application/zipball/7d76925641f19b7138bde3b152e2f85d94db8042",
+                "reference": "7d76925641f19b7138bde3b152e2f85d94db8042",
                 "shasum": ""
             },
             "require": {
@@ -154,9 +154,9 @@
             "description": "PHP library application within the pureContent library suite",
             "support": {
                 "issues": "https://github.com/libpurecontent/application/issues",
-                "source": "https://github.com/libpurecontent/application/tree/v1.9.11"
+                "source": "https://github.com/libpurecontent/application/tree/v1.10.2"
             },
-            "time": "2026-06-29T13:51:57+00:00"
+            "time": "2026-09-26T15:59:32+00:00"
         },
         {
             "name": "libpurecontent/csv",

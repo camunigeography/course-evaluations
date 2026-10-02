@@ -1459,7 +1459,7 @@ class courseEvaluations extends frontControllerApplication
 			return false;
 		}
 		
-		//application::dumpData ($this->assessing, $hide = true);
+		//application::dumpData ($this->assessing, false, $hide = true);
 		
 		# Start this section
 		$html  = "\n<h2>Evaluations</h2>";

@@ -9,7 +9,7 @@
         "libpurecontent/timedate": "^1.4",
         "libpurecontent/csv": "^1.6",
         "libpurecontent/ultimateform": "^1.31",
-        "libpurecontent/application": "^1.9"
+        "libpurecontent/application": "^1.10"
     },
     "autoload": {
         "files": ["courseEvaluations.php"]
