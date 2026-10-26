@@ -231,7 +231,7 @@ class assessmentsResults
 	
 	
 	# Function to create a results page based on a supplied dataset of responses for a set of courses (HTML version)
-	private function resultsPageHtml ($resultsByGroup, $courseDetailsByGroup, $includePieCharts = true, $pieChartWidth, $pieChartHeight, $pieChartStub)
+	private function resultsPageHtml ($resultsByGroup, $courseDetailsByGroup, $includePieCharts, $pieChartWidth, $pieChartHeight, $pieChartStub)
 	{
 		# Start the HTML
 		$html  = '';
