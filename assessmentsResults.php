@@ -5,7 +5,14 @@
 class assessmentsResults
 {
 	# Class properties
+	private $baseUrl;
+	private $types;
+	private $currentAcademicYear;
+	private $userIsAdministrator;
+	private $enableExportLink;
 	private $html = '';
+	
+	
 	
 	# Settings
 	
