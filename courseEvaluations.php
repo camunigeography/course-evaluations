@@ -1353,13 +1353,18 @@ class courseEvaluations extends frontControllerApplication
 				{$this->settings['database']}.lecturers,
 				{$this->settings['globalPeopleDatabase']}.people
 			WHERE
-				lecturers.year = '{$this->currentAcademicYear}'
-				AND lecturers.yeargroup = '{$this->userDetails['yeargroup']}'
-				AND lecturers.course = '" . $this->databaseConnection->escape ($courseUrl) . "'
+				lecturers.year = :currentAcademicYear
+				AND lecturers.yeargroup = :yeargroup
+				AND lecturers.course = :courseUrl
 				AND lecturers.lecturer = {$this->settings['globalPeopleDatabase']}.people.username
-			ORDER BY subcourseId,id
+			ORDER BY subcourseId, id
 		;";
-		$lecturers = $this->databaseConnection->getData ($query, "{$this->settings['database']}.lecturers");
+		$preparedStatementValues = array (
+			'currentAcademicYear' => $this->currentAcademicYear,
+			'yeargroup' => $this->userDetails['yeargroup'],
+			'courseUrl' => $courseUrl,
+		);
+		$lecturers = $this->databaseConnection->getData ($query, "{$this->settings['database']}.lecturers", true, $preparedStatementValues);
 		
 		# Return the data;
 		return $lecturers;
