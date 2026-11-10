@@ -1098,9 +1098,9 @@ class courseEvaluations extends frontControllerApplication
 			return "\n<p class=\"warning\">Results are not yet viewable.</p>";
 		}
 		
-		# Get all courses and lecturers being assessed this year
-		$courses = $this->getCoursesLecturedAssessedThisYear ();
-		$lecturers = $this->getLecturersAssessedThisYear ();
+		# Get all courses and lecturers being assessed for the specified year
+		$courses = $this->getCoursesLecturedAssessedForYear ($selectedAcademicYear);
+		$lecturers = $this->getLecturersAssessedForYear ($selectedAcademicYear);
 		
 		# Merge the lists
 		$courseDetails = array_merge ($courses, $lecturers);
@@ -1186,8 +1186,8 @@ class courseEvaluations extends frontControllerApplication
 	}
 	
 	
-	# Function to get the courses being lectured being assessed this year
-	private function getCoursesLecturedAssessedThisYear ()
+	# Function to get the courses being lectured being assessed for a specified year
+	private function getCoursesLecturedAssessedForYear ($selectedAcademicYear)
 	{
 		# Construct the query
 		$query = "SELECT
@@ -1198,7 +1198,7 @@ class courseEvaluations extends frontControllerApplication
 			FROM
 				" . ($this->userDetails['type'] == 'lecturer' ? "{$this->settings['database']}.lecturers," : '') . "
 				{$this->settings['database']}.courses
-			WHERE courses.year = '{$this->currentAcademicYear}'
+			WHERE courses.year = '{$selectedAcademicYear}'
 			" . ($this->userDetails['type'] == 'lecturer' ? "
 				AND lecturers.lecturer = '{$this->user}'
 				AND lecturers.course = courses.url			/* These three basically act as the combined key between lecturers and courses */
@@ -1218,7 +1218,7 @@ class courseEvaluations extends frontControllerApplication
 	
 	
 	# Function to get the lecturers being assessed this year
-	private function getLecturersAssessedThisYear ()
+	private function getLecturersAssessedForYear ($selectedAcademicYear)
 	{
 		#!# LOWER(yeargroup) inconsistency in data needs to be fixed
 		#!# Use of globalPeopleDatabase needs to be eliminated in favour of an API call
@@ -1233,7 +1233,7 @@ class courseEvaluations extends frontControllerApplication
 				{$this->settings['database']}.courses,
 				{$this->settings['globalPeopleDatabase']}.people
 			WHERE
-				lecturers.year = '{$this->currentAcademicYear}'
+				lecturers.year = '{$selectedAcademicYear}'
 				AND
 					lecturers.course = courses.url			/* These three basically act as the combined key between lecturers and courses */
 					AND lecturers.year = courses.year
