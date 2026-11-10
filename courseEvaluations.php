@@ -290,7 +290,7 @@ class courseEvaluations extends frontControllerApplication
 		if ($this->action == 'feedback') {return;}
 		
 		# Version tables by year if required
-		if ($this->action != 'results') {	// Results can switch year so should run year versioning itself
+		if (!in_array ($this->action, array ('results', 'export'))) {	// Results can switch year so should run year versioning itself
 			$this->yearVersioning ($this->currentAcademicYear);
 		}
 		
@@ -381,7 +381,7 @@ class courseEvaluations extends frontControllerApplication
 	
 	
 	# Results
-	public function results ()
+	public function results ($csvMode = false)
 	{
 		# Start the HTML
 		$html = '';
@@ -410,10 +410,12 @@ class courseEvaluations extends frontControllerApplication
 		$this->yearVersioning ($selectedAcademicYear);
 		
 		# Show a droplist of years
-		$html .= $this->yearsDroplist ($years, $selectedAcademicYear);
+		if (!$csvMode) {
+			$html .= $this->yearsDroplist ($years, $selectedAcademicYear);
+		}
 		
 		# Show results
-		$html .= $this->showResults ($selectedAcademicYear);
+		$html .= $this->showResults ($selectedAcademicYear, $csvMode);
 		
 		# Show the HTML
 		echo $html;
@@ -466,9 +468,8 @@ class courseEvaluations extends frontControllerApplication
 	# Function to export the result data to a CSV
 	public function export ()
 	{
-		# Show results
-		#!# Academic year currently fixed at current year
-		echo $this->showResults ($this->currentAcademicYear, $csv = true);
+		# Show results, in CSV mode
+		$this->results ($csvMode = true);
 	}
 	
 	
