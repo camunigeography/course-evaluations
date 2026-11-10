@@ -1108,7 +1108,7 @@ class courseEvaluations extends frontControllerApplication
 		# End if no results
 		#!# This message should be more specific
 		if (!$courseDetails) {
-			$html  = "\n<p>No results are available to you for the selected year.</p>";
+			$html  = "\n<p>No results are available to you for the selected year ({$selectedAcademicYear}).</p>";
 			return $html;
 		}
 		
