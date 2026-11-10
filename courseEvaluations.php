@@ -1295,9 +1295,8 @@ class courseEvaluations extends frontControllerApplication
 		# Get the submissions for each course
 		$submissions = array ();
 		foreach ($results as $index => $course) {
-			#!# Needs to be converted to prepared statements
-			$query = "SELECT * FROM {$this->settings['database']}.{$table} WHERE " . ($group == 'lecturers' ? 'lecturerId' : 'courseId') . " = '{$course['id']}';";
-			$submissions[$course['id']] = $this->databaseConnection->getData ($query);
+			$field = ($group == 'lecturers' ? 'lecturerId' : 'courseId');
+			$submissions[$course['id']] = $this->databaseConnection->select ($this->settings['database'], $table, array ($field => $course['id']));
 		}
 		return $submissions;
 		
