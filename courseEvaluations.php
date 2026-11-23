@@ -1748,6 +1748,21 @@ class courseEvaluations extends frontControllerApplication
 					}
 				}
 				
+				# For courses, validate yeargroup and type values
+				if ($type == 'courses') {
+					foreach ($data as $index => $row) {
+						if (!in_array ($row['yeargroup'], $undergraduateYearGroups)) {
+							$form->registerProblem ('headers', 'Invalid year group at line ' . ($index + 1) . ": '<strong>" . htmlspecialchars ($row['yeargroup']) . "</strong>' - must be one of: " . implode ('/', $undergraduateYearGroups));
+							break;
+						}
+						if (!array_key_exists ($row['type'], $this->types)) {
+							$form->registerProblem ('headers', 'Invalid form type at line ' . ($index + 1) . ": '<strong>" . htmlspecialchars ($row['type']) . "</strong>' - must be one of: " . implode ('/', array_keys ($this->types)));
+							break;
+						}
+					}
+				}
+				
+				
 				#!# At this stage, the system should check that all submitted CRSIDs are in the {$this->settings['globalPeopleDatabase']}.people database. Although these will be picked up on a subsequent page load, the importer ought to do that check.
 				#!# Also, the system should check that, once courses and lecturer data is present, that the student data uses the same URL monikers for the courses, complaining if there is a mismatch.
 			}
